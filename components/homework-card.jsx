@@ -19,10 +19,12 @@ export function HomeworkCard({ hw, now, onOpen }) {
                 aria-label={done ? `Mark "${hw.title}" as not done` : `Mark "${hw.title}" as done`}
                 className="w-6 h-6 shrink-0 cursor-pointer accent-accent"
             />
-            <button
-                type="button"
-                onClick={onOpen}
-                className="flex flex-wrap items-center gap-x-3 gap-y-1 grow min-h-11 text-left cursor-pointer"
+            <Body
+                onOpen={onOpen}
+                className={[
+                    'flex flex-wrap items-center gap-x-3 gap-y-1 grow min-h-11 text-left',
+                    onOpen ? 'cursor-pointer' : ''
+                ].join(' ')}
             >
                 <span className={['font-medium', done ? 'line-through text-muted' : ''].join(' ')}>{hw.title}</span>
                 {cls && (
@@ -39,7 +41,16 @@ export function HomeworkCard({ hw, now, onOpen }) {
                 >
                     {done ? 'done' : relative === 'overdue' ? 'overdue' : `due ${relative}`}
                 </span>
-            </button>
+            </Body>
         </div>
+    );
+}
+
+function Body({ onOpen, className, children }) {
+    if (!onOpen) return <div className={className}>{children}</div>;
+    return (
+        <button type="button" onClick={onOpen} className={className}>
+            {children}
+        </button>
     );
 }
