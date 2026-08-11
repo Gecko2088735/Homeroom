@@ -38,6 +38,19 @@
 }
 
 @layer base {
+    /* Smooths the light/dark theme switch instead of an instant flash. Scoped to color
+       properties only (not layout) so it never touches hover/click responsiveness, and
+       skipped entirely for users who've asked for reduced motion. */
+    @media (prefers-reduced-motion: no-preference) {
+        *,
+        *::before,
+        *::after {
+            transition-property: background-color, border-color, color, fill;
+            transition-timing-function: ease;
+            transition-duration: 300ms;
+        }
+    }
+
     :root {
         color-scheme: light;
     }
