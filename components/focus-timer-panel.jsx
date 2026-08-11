@@ -2,27 +2,61 @@
 
 import { useEffect, useState } from 'react';
 import { playChime } from 'lib/chime';
+import {
+    loadFocusSettings,
+    MAX_BREAK_MINUTES,
+    MAX_WORK_MINUTES,
+    MIN_BREAK_MINUTES,
+    MIN_WORK_MINUTES,
+    saveFocusSettings
+} from 'lib/focus-settings';
 import { notify, requestNotificationPermission } from 'lib/notify';
 import { pauseForBreak, resumeForWork } from 'lib/spotify';
-import { formatClock, useFocusTimer, WORK_SECONDS } from 'lib/use-focus-timer';
+import { formatClock, useFocusTimer } from 'lib/use-focus-timer';
 
 const PHASE_LABEL = { work: 'Focus', break: 'Break' };
-const PHASE_MESSAGE = {
-    work: 'Back to work — 25 minutes on the clock.',
-    break: 'Break time! Step away for 5 minutes.'
-};
 
 export function FocusTimerPanel({ classLabel }) {
     const [notifyReady, setNotifyReady] = useState(false);
 
-    const { phase, remaining, running, cycles, start, pause, reset, skip } = useFocusTimer({
+    const {
+        phase,
+        remaining,
+        running,
+        cycles,
+        workSeconds,
+        breakSeconds,
+        start,
+        pause,
+        reset,
+        skip,
+        setWorkSeconds,
+        setBreakSeconds
+    } = useFocusTimer({
         onPhaseChange(next) {
             playChime();
-            notify(PHASE_LABEL[next], PHASE_MESSAGE[next]);
+            const minutes = Math.round((next === 'work' ? workSeconds : breakSeconds) / 60);
+            notify(
+                PHASE_LABEL[next],
+                next === 'work'
+                    ? `Back to work — ${minutes} minute${minutes === 1 ? '' : 's'} on the clock.`
+                    : `Break time! Step away for ${minutes} minute${minutes === 1 ? '' : 's'}.`
+            );
             if (next === 'break') pauseForBreak();
             else resumeForWork();
         }
     });
+
+    useEffect(() => {
+        const saved = loadFocusSettings();
+        if (saved) {
+            // Settings load client-side after mount (localStorage isn't available during
+            // SSR/prerender); this only ever runs once, before the timer has been started.
+            setWorkSeconds(saved.workMinutes * 60);
+            setBreakSeconds(saved.breakMinutes * 60);
+        }
+        // eslint-disable-next-line react-hooks/exhaustive-deps -- run once on mount only
+    }, []);
 
     useEffect(() => {
         if (notifyReady) requestNotificationPermission();
@@ -33,10 +67,52 @@ export function FocusTimerPanel({ classLabel }) {
         start();
     }
 
-    const progress = 1 - remaining / (phase === 'work' ? WORK_SECONDS : WORK_SECONDS / 5);
+    function handleWorkMinutesChange(e) {
+        const minutes = Number(e.target.value);
+        if (!minutes || minutes < MIN_WORK_MINUTES || minutes > MAX_WORK_MINUTES) return;
+        setWorkSeconds(minutes * 60);
+        saveFocusSettings(minutes, Math.round(breakSeconds / 60));
+    }
+
+    function handleBreakMinutesChange(e) {
+        const minutes = Number(e.target.value);
+        if (!minutes || minutes < MIN_BREAK_MINUTES || minutes > MAX_BREAK_MINUTES) return;
+        setBreakSeconds(minutes * 60);
+        saveFocusSettings(Math.round(workSeconds / 60), minutes);
+    }
+
+    const progress = 1 - remaining / (phase === 'work' ? workSeconds : breakSeconds);
 
     return (
         <div className="flex flex-col items-center gap-6 px-6 py-10 border bg-surface border-edge rounded-xl">
+            <div className="flex flex-wrap items-end justify-center gap-4">
+                <label className="flex flex-col gap-1.5 text-sm font-medium">
+                    Focus minutes
+                    <input
+                        type="number"
+                        className="input w-24"
+                        min={MIN_WORK_MINUTES}
+                        max={MAX_WORK_MINUTES}
+                        value={Math.round(workSeconds / 60)}
+                        onChange={handleWorkMinutesChange}
+                        disabled={running}
+                    />
+                </label>
+                <label className="flex flex-col gap-1.5 text-sm font-medium">
+                    Break minutes
+                    <input
+                        type="number"
+                        className="input w-24"
+                        min={MIN_BREAK_MINUTES}
+                        max={MAX_BREAK_MINUTES}
+                        value={Math.round(breakSeconds / 60)}
+                        onChange={handleBreakMinutesChange}
+                        disabled={running}
+                    />
+                </label>
+            </div>
+            {running && <p className="-mt-2 text-xs text-muted">Pause to change session lengths.</p>}
+
             <div className="flex flex-col items-center gap-1">
                 <span
                     className={[
