@@ -2,74 +2,76 @@
 
 @import 'tailwindcss';
 
+@custom-variant dark (&:where(.dark, .dark *));
+
 @theme {
-    --background-image-noise: linear-gradient(
-            to bottom,
-            color-mix(in oklab, var(--color-neutral-950) 0%, transparent),
-            color-mix(in oklab, var(--color-neutral-950) 100%, transparent)
-        ),
-        url('/images/noise.png');
-    --color-primary: #2bdcd2;
-    --color-primary-content: #171717;
-    --color-secondary: #016968;
+    /* Light theme values. Utilities compile to var(--color-*), so .dark re-themes everything by overriding these. */
+    --color-background: #f6f8fa;
+    --color-surface: #ffffff;
+    --color-surface-hover: #eef2f6;
+    --color-foreground: #1b1e22;
+    --color-muted: #5f6368;
+    --color-edge: #dde3ea;
+    --color-accent: #1a8cf0;
+    --color-accent-soft: #d8ecfd;
+    --color-accent-foreground: #ffffff;
+    --color-danger: #e5484d;
+    --color-danger-soft: #fde8e8;
     --font-sans: 'Inter', ui-sans-serif, system-ui, sans-serif, 'Apple Color Emoji', 'Segoe UI Emoji', 'Segoe UI Symbol',
         'Noto Color Emoji';
 }
 
+.dark {
+    /* Chrome-dark-mode palette: near-black grays, never pure black. */
+    --color-background: #202124;
+    --color-surface: #292a2d;
+    --color-surface-hover: #35363a;
+    --color-foreground: #e8eaed;
+    --color-muted: #9aa0a6;
+    --color-edge: #3c4043;
+    --color-accent: #8ab4f8;
+    --color-accent-soft: #283142;
+    --color-accent-foreground: #202124;
+    --color-danger: #f28b82;
+    --color-danger-soft: #3c2a2a;
+}
+
 @layer base {
     h1 {
-        @apply text-4xl font-bold tracking-tight sm:text-5xl;
+        @apply text-3xl font-bold tracking-tight sm:text-4xl;
     }
 
     h2 {
-        @apply text-2xl font-bold sm:text-3xl;
+        @apply text-xl font-bold sm:text-2xl;
     }
 
     h3 {
-        @apply text-xl font-bold;
+        @apply text-lg font-bold;
     }
 
-    a:not(.btn) {
-        @apply underline transition hover:opacity-80;
-    }
-
-    :not(pre) > code {
-        @apply px-1 py-0.5 font-mono rounded bg-neutral-900 text-yellow-200;
-        font-size: 0.9em;
+    body {
+        @apply bg-background text-foreground;
     }
 }
 
 @layer components {
-    .markdown {
-        > * {
-            @apply my-4;
-        }
-
-        :where(h1, h2) {
-            @apply mt-12 mb-6;
-        }
-
-        > :first-child {
-            @apply mt-0;
-        }
-
-        > :last-child {
-            @apply mb-0;
-        }
-    }
-
     .btn {
-        @apply inline-flex items-center justify-center gap-2 font-bold text-center no-underline transition-colors cursor-pointer bg-primary text-primary-content;
+        @apply inline-flex items-center justify-center gap-2 font-bold text-center no-underline transition-colors cursor-pointer bg-accent text-accent-foreground;
         padding: var(--btn-py, 0.875rem) var(--btn-px, 1.25rem);
         font-size: var(--btn-font-size, 0.875rem);
-        border-radius: var(--btn-border-radius, 0.25rem);
+        border-radius: var(--btn-border-radius, 0.5rem);
+        min-height: 44px;
 
         &:hover {
-            @apply bg-primary/85;
+            @apply bg-accent/85;
+        }
+
+        &:focus-visible {
+            @apply outline-2 outline-offset-2 outline-accent;
         }
 
         &:disabled {
-            @apply cursor-default text-neutral-400 bg-neutral-700;
+            @apply cursor-default opacity-50;
         }
     }
 
@@ -79,79 +81,24 @@
         --btn-py: 1.125rem;
     }
 
+    .btn-ghost {
+        @apply bg-transparent text-foreground border border-edge;
+
+        &:hover {
+            @apply bg-surface-hover;
+        }
+    }
+
+    .btn-danger {
+        @apply bg-danger text-white;
+
+        &:hover {
+            @apply bg-danger/85;
+        }
+    }
+
     .input {
-        @apply px-4 py-3 text-sm border rounded-sm border-neutral-300 text-neutral-900 focus:border-primary focus:outline-3 focus:outline-primary/30;
-    }
-
-    .diff {
-        direction: ltr;
-        container-type: inline-size;
-        grid-template-columns: auto 1fr;
-
-        &:focus-visible,
-        &:has(.diff-item-1:focus),
-        &:has(.diff-item-2:focus) {
-            outline: 2px solid var(--color-gray-400);
-            outline-offset: 1px;
-        }
-        &:focus-visible {
-            .diff-resizer {
-                min-width: 80cqi;
-                max-width: 80cqi;
-            }
-        }
-        &:has(.diff-item-2:focus-visible) {
-            .diff-resizer {
-                min-width: 20cqi;
-                max-width: 20cqi;
-            }
-        }
-    }
-
-    .diff-resizer {
-        width: 50cqi;
-        max-width: calc(100cqi - 1rem);
-        transform: scaleY(3) translate(0.35rem, 0.08rem);
-        transform-origin: 100% 100%;
-        clip-path: inset(calc(100% - 0.75rem) 0 0 calc(100% - 0.75rem));
-        transition: min-width 0.3s ease-out, max-width 0.3s ease-out;
-    }
-
-    .diff-item-2 {
-        &:after {
-            content: '';
-            width: 1.25rem;
-            height: 1.875rem;
-            position: absolute;
-            top: 50%;
-            right: 1px;
-            bottom: 0;
-            translate: 50% -50%;
-            background: color-mix(in oklab, var(--color-white) 50%, transparent);
-            border-radius: 9999px;
-            border: 2px solid var(--color-white);
-            backdrop-filter: blur(8px);
-            pointer-events: none;
-            z-index: 2;
-            box-shadow: inset 0 0 0 1px color-mix(in oklab, var(--color-gray-900) 5%, transparent),
-                0 1px 3px 0 color-mix(in oklab, var(--color-gray-900) 20%, transparent);
-        }
-        @supports (-webkit-overflow-scrolling: touch) and (overflow: -webkit-paged-x) {
-            &:after {
-                content: none;
-            }
-        }
-    }
-
-    .diff-item-1,
-    .diff-item-2 {
-        > * {
-            height: 100%;
-            width: 100cqi;
-            position: absolute;
-            top: 0;
-            left: 0;
-            pointer-events: none;
-        }
+        @apply w-full px-4 py-3 text-sm border rounded-lg border-edge bg-surface text-foreground focus:border-accent focus:outline-3 focus:outline-accent/30;
+        min-height: 44px;
     }
 }

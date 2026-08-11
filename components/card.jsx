@@ -1,10 +1,20 @@
-export function Card({ title, children, className }) {
+export function Card({ title, children, className, onClick }) {
+    const Tag = onClick ? 'button' : 'div';
     return (
-        <div className={['bg-white rounded-sm text-neutral-600', className].filter(Boolean).join(' ')}>
-            <div className="flex flex-col gap-4 px-6 py-8">
-                {title && <h3 className="text-neutral-900">{title}</h3>}
+        <Tag
+            onClick={onClick}
+            className={[
+                'bg-surface border border-edge rounded-xl text-left w-full',
+                onClick ? 'cursor-pointer transition-colors hover:bg-surface-hover' : '',
+                className
+            ]
+                .filter(Boolean)
+                .join(' ')}
+        >
+            <div className="flex flex-col gap-3 px-5 py-5">
+                {title && <h3>{title}</h3>}
                 {children}
             </div>
-        </div>
+        </Tag>
     );
 }
