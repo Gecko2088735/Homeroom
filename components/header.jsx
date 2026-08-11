@@ -30,7 +30,9 @@ export function Header() {
                                 aria-current={active ? 'page' : undefined}
                                 className={[
                                     'inline-flex items-center px-3 py-2 min-h-11 rounded-lg text-sm font-medium no-underline transition-colors',
-                                    active ? 'bg-accent-soft text-accent' : 'text-muted hover:bg-surface-hover hover:text-foreground'
+                                    active
+                                        ? 'bg-accent-soft text-accent'
+                                        : 'text-muted hover:bg-surface-hover hover:text-foreground'
                                 ].join(' ')}
                             >
                                 {item.linkText}

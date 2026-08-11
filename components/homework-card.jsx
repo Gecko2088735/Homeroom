@@ -11,14 +11,16 @@ export function HomeworkCard({ hw, now, onOpen }) {
     const overdue = !done && relative === 'overdue';
 
     return (
-        <div className="flex items-center gap-3 px-4 py-3 border bg-surface border-edge rounded-xl">
-            <input
-                type="checkbox"
-                checked={done}
-                onChange={() => toggleComplete(hw.id)}
-                aria-label={done ? `Mark "${hw.title}" as not done` : `Mark "${hw.title}" as done`}
-                className="w-6 h-6 shrink-0 cursor-pointer accent-accent"
-            />
+        <div className="flex items-center gap-1 px-2 py-2 border bg-surface border-edge rounded-xl sm:gap-3 sm:px-4 sm:py-3">
+            <label className="inline-flex items-center justify-center w-11 h-11 shrink-0 cursor-pointer">
+                <input
+                    type="checkbox"
+                    checked={done}
+                    onChange={() => toggleComplete(hw.id)}
+                    aria-label={done ? `Mark "${hw.title}" as not done` : `Mark "${hw.title}" as done`}
+                    className="w-6 h-6 cursor-pointer accent-accent"
+                />
+            </label>
             <Body
                 onOpen={onOpen}
                 className={[

@@ -8,6 +8,9 @@ export function ThemeToggle({ className }) {
     const [theme, setTheme] = useState(null);
 
     useEffect(() => {
+        // The pre-paint script sets the .dark class before React hydrates; read it back
+        // client-side after mount rather than guessing during render.
+        // eslint-disable-next-line react-hooks/set-state-in-effect
         setTheme(document.documentElement.classList.contains('dark') ? 'dark' : 'light');
     }, []);
 

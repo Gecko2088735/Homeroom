@@ -29,7 +29,12 @@ export default function CalendarPage() {
                         aria-label="Previous week"
                         className="inline-flex items-center justify-center w-11 h-11 border rounded-lg cursor-pointer border-edge bg-surface text-foreground transition-colors hover:bg-surface-hover"
                     >
-                        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" className="w-5 h-5 fill-current" aria-hidden="true">
+                        <svg
+                            xmlns="http://www.w3.org/2000/svg"
+                            viewBox="0 0 24 24"
+                            className="w-5 h-5 fill-current"
+                            aria-hidden="true"
+                        >
                             <path d="m14 18l-6-6l6-6l1.4 1.4L10.8 12l4.6 4.6L14 18Z" />
                         </svg>
                     </button>
@@ -40,7 +45,12 @@ export default function CalendarPage() {
                         aria-label="Next week"
                         className="inline-flex items-center justify-center w-11 h-11 border rounded-lg cursor-pointer border-edge bg-surface text-foreground transition-colors hover:bg-surface-hover"
                     >
-                        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" className="w-5 h-5 fill-current" aria-hidden="true">
+                        <svg
+                            xmlns="http://www.w3.org/2000/svg"
+                            viewBox="0 0 24 24"
+                            className="w-5 h-5 fill-current"
+                            aria-hidden="true"
+                        >
                             <path d="M12.6 12L8 7.4L9.4 6l6 6l-6 6L8 16.6l4.6-4.6Z" />
                         </svg>
                     </button>

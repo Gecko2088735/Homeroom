@@ -13,6 +13,9 @@ export function StoreProvider({ children }) {
     const [data, setData] = useState(null);
 
     useEffect(() => {
+        // localStorage is unavailable during SSR/prerender, so the initial read has to happen
+        // client-side after mount rather than in the useState initializer.
+        // eslint-disable-next-line react-hooks/set-state-in-effect
         setData(loadData());
     }, []);
 

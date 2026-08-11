@@ -105,7 +105,7 @@ export default function HomeworkPage() {
             <ConfirmDialog
                 open={!!deleting}
                 onClose={() => setDeleting(null)}
-                onConfirm={() => store.deleteHomework(deleting.id)}
+                onConfirm={() => store.deleteHomework(deleting?.id)}
                 title="Delete homework?"
                 message={deleting ? `"${deleting.title}" will be permanently removed.` : ''}
             />

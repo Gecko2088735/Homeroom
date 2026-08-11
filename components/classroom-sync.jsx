@@ -92,8 +92,9 @@ export function ClassroomSync() {
                     {status.counts.added} new {status.counts.added === 1 ? 'assignment' : 'assignments'}
                     {status.counts.updated > 0 && `, ${status.counts.updated} updated`}
                     {status.counts.kept > 0 && `, ${status.counts.kept} kept your edits`}
-                    {status.counts.skippedUndated > 0 && ` (${status.counts.skippedUndated} without a due date skipped)`}.
-                    Re-syncing never duplicates items.
+                    {status.counts.skippedUndated > 0 &&
+                        ` (${status.counts.skippedUndated} without a due date skipped)`}
+                    . Re-syncing never duplicates items.
                 </Alert>
             )}
             {status.state === 'error' && <Alert type="error">Sync failed: {status.message}</Alert>}

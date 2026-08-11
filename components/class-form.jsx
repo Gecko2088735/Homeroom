@@ -41,9 +41,7 @@ export function ClassForm({ cls, onSubmit, onCancel }) {
         setForm((f) => ({
             ...f,
             days: f.days.includes(day) ? f.days.filter((d) => d !== day) : [...f.days, day],
-            perDay: f.perDay[day]
-                ? f.perDay
-                : { ...f.perDay, [day]: { startTime: f.startTime, endTime: f.endTime } }
+            perDay: f.perDay[day] ? f.perDay : { ...f.perDay, [day]: { startTime: f.startTime, endTime: f.endTime } }
         }));
     }
 
@@ -117,10 +115,10 @@ export function ClassForm({ cls, onSubmit, onCancel }) {
             </fieldset>
 
             {form.days.length > 1 && (
-                <label className="flex items-center gap-2 text-sm">
+                <label className="flex items-center gap-2 min-h-11 text-sm cursor-pointer">
                     <input
                         type="checkbox"
-                        className="w-5 h-5 accent-accent"
+                        className="w-5 h-5 cursor-pointer accent-accent"
                         checked={form.sameTimes}
                         onChange={(e) => setForm((f) => ({ ...f, sameTimes: e.target.checked }))}
                     />

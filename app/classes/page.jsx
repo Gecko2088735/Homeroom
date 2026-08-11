@@ -66,7 +66,7 @@ export default function ClassesPage() {
             <ConfirmDialog
                 open={!!deleting}
                 onClose={() => setDeleting(null)}
-                onConfirm={() => store.deleteClass(deleting.id)}
+                onConfirm={() => store.deleteClass(deleting?.id)}
                 title="Delete class?"
                 message={
                     deleting
