@@ -1,13 +1,16 @@
 'use client';
 
 import { useState } from 'react';
+import { CLASS_COLOR_KEYS, classColor, nextClassColor } from 'lib/colors';
 import { DAY_LABELS_SHORT, WEEK_DAYS } from 'lib/dates';
+import { useStore } from 'lib/store';
 
-function initialState(cls) {
+function initialState(cls, existingClasses) {
     if (!cls) {
         return {
             name: '',
             location: '',
+            color: nextClassColor(existingClasses),
             days: [],
             sameTimes: true,
             startTime: '09:00',
@@ -26,6 +29,7 @@ function initialState(cls) {
     return {
         name: cls.name,
         location: cls.location ?? '',
+        color: cls.color ?? nextClassColor(existingClasses),
         days,
         sameTimes,
         startTime: first?.startTime ?? '09:00',
@@ -35,7 +39,8 @@ function initialState(cls) {
 }
 
 export function ClassForm({ cls, onSubmit, onCancel }) {
-    const [form, setForm] = useState(() => initialState(cls));
+    const { classes } = useStore();
+    const [form, setForm] = useState(() => initialState(cls, classes));
 
     function toggleDay(day) {
         setForm((f) => ({
@@ -60,7 +65,7 @@ export function ClassForm({ cls, onSubmit, onCancel }) {
                 return { day, startTime: times.startTime, endTime: times.endTime || null };
             })
             .filter(Boolean);
-        onSubmit({ name: form.name.trim(), location: form.location.trim(), meetings });
+        onSubmit({ name: form.name.trim(), location: form.location.trim(), color: form.color, meetings });
     }
 
     const orderedSelectedDays = WEEK_DAYS.filter((d) => form.days.includes(d));
@@ -88,6 +93,30 @@ export function ClassForm({ cls, onSubmit, onCancel }) {
                     placeholder="e.g. Room 204"
                 />
             </label>
+
+            <fieldset className="flex flex-col gap-2">
+                <legend className="text-sm font-medium">Color</legend>
+                <div className="flex flex-wrap gap-2">
+                    {CLASS_COLOR_KEYS.map((key) => {
+                        const selected = form.color === key;
+                        return (
+                            <button
+                                key={key}
+                                type="button"
+                                onClick={() => setForm((f) => ({ ...f, color: key }))}
+                                aria-label={key}
+                                aria-pressed={selected}
+                                className={[
+                                    'w-11 h-11 rounded-full cursor-pointer flex items-center justify-center transition-transform',
+                                    selected ? 'ring-2 ring-offset-2 ring-offset-surface ring-foreground scale-105' : ''
+                                ].join(' ')}
+                            >
+                                <span className={['w-7 h-7 rounded-full', classColor(key).dot].join(' ')} />
+                            </button>
+                        );
+                    })}
+                </div>
+            </fieldset>
 
             <fieldset className="flex flex-col gap-2">
                 <legend className="text-sm font-medium">Days</legend>

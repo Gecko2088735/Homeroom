@@ -3,6 +3,7 @@
 import Link from 'next/link';
 import { CountdownHero } from 'components/countdown-hero';
 import { HomeworkCard } from 'components/homework-card';
+import { classColor } from 'lib/colors';
 import { addDays, formatTime, homeworkDueAt, todaysClasses } from 'lib/dates';
 import { useStore } from 'lib/store';
 import { useNow } from 'lib/use-now';
@@ -37,12 +38,13 @@ export default function HomePage() {
                         {today.map(({ cls, meeting, start, end }) => {
                             const past = end < now;
                             const current = start <= now && now < end;
+                            const color = classColor(cls.color);
                             return (
                                 <div
                                     key={`${cls.id}-${meeting.day}-${meeting.startTime}`}
                                     className={[
-                                        'flex items-center gap-4 px-5 py-4 border rounded-xl bg-surface',
-                                        current ? 'border-accent' : 'border-edge',
+                                        'flex items-center gap-4 px-5 py-4 border-y border-r rounded-xl bg-surface border-l-4',
+                                        current ? 'border-accent' : color.border,
                                         past ? 'opacity-50' : ''
                                     ].join(' ')}
                                 >

@@ -1,6 +1,7 @@
 'use client';
 
 import { createContext, useContext, useEffect, useState } from 'react';
+import { nextClassColor } from './colors';
 import { emptyData, loadData, saveData } from './storage';
 
 const StoreContext = createContext(null);
@@ -37,6 +38,7 @@ export function StoreProvider({ children }) {
                 name: '',
                 location: '',
                 meetings: [],
+                color: nextClassColor(current.classes),
                 source: 'manual',
                 externalId: null,
                 ...fields,
@@ -138,6 +140,7 @@ export function applyClassroomImport(d, { courses, courseworkByCourse }) {
                 name: course.name,
                 location: course.room ?? '',
                 meetings: [],
+                color: nextClassColor(classes),
                 source: 'classroom',
                 externalId: course.id,
                 createdAt: stamp,

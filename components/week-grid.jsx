@@ -1,5 +1,6 @@
 'use client';
 
+import { classColor } from 'lib/colors';
 import { DAY_LABELS_SHORT, formatTime, isSameDay, weekEvents } from 'lib/dates';
 
 export function WeekGrid({ weekStart, classes, homework, now }) {
@@ -24,15 +25,22 @@ export function WeekGrid({ weekStart, classes, homework, now }) {
                             <span className={today ? '' : 'font-normal'}>{date.getDate()}</span>
                         </p>
 
-                        {dayClasses.map(({ cls, meeting }) => (
-                            <div
-                                key={`${cls.id}-${meeting.startTime}`}
-                                className="flex flex-col px-2 py-1.5 text-xs rounded-lg bg-accent-soft text-foreground"
-                            >
-                                <span className="font-semibold">{cls.name}</span>
-                                <span className="text-muted">{formatTime(meeting.startTime)}</span>
-                            </div>
-                        ))}
+                        {dayClasses.map(({ cls, meeting }) => {
+                            const color = classColor(cls.color);
+                            return (
+                                <div
+                                    key={`${cls.id}-${meeting.startTime}`}
+                                    className={[
+                                        'flex flex-col px-2 py-1.5 text-xs rounded-lg border-l-2',
+                                        color.soft,
+                                        color.border
+                                    ].join(' ')}
+                                >
+                                    <span className={['font-semibold', color.text].join(' ')}>{cls.name}</span>
+                                    <span className="text-muted">{formatTime(meeting.startTime)}</span>
+                                </div>
+                            );
+                        })}
 
                         {dayHomework.map((hw) => (
                             <div

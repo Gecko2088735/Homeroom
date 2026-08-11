@@ -1,15 +1,26 @@
 'use client';
 
+import { classColor } from 'lib/colors';
 import { meetingSummary } from 'lib/dates';
 
 export function ClassCard({ cls, onEdit, onDelete }) {
     const summary = meetingSummary(cls.meetings);
+    const color = classColor(cls.color);
 
     return (
-        <div className="flex flex-col gap-3 px-5 py-5 border bg-surface border-edge rounded-xl">
+        <div
+            className={[
+                'flex flex-col gap-3 px-5 py-5 border-y border-r bg-surface border-edge rounded-xl border-l-4',
+                color.border
+            ].join(' ')}
+        >
             <div className="flex items-start justify-between gap-3">
                 <div className="flex flex-col gap-1">
                     <div className="flex items-center gap-2">
+                        <span
+                            className={['w-2.5 h-2.5 rounded-full shrink-0', color.dot].join(' ')}
+                            aria-hidden="true"
+                        />
                         <h3>{cls.name}</h3>
                         {cls.source === 'classroom' && (
                             <span className="px-2 py-0.5 text-xs font-medium rounded-full bg-accent-soft text-accent">

@@ -1,11 +1,13 @@
 'use client';
 
+import { classColor } from 'lib/colors';
 import { formatRelative, homeworkDueAt } from 'lib/dates';
 import { useStore } from 'lib/store';
 
 export function HomeworkCard({ hw, now, onOpen }) {
     const { classes, toggleComplete } = useStore();
     const cls = classes.find((c) => c.id === hw.classId);
+    const color = cls ? classColor(cls.color) : null;
     const done = !!hw.completedAt;
     const relative = formatRelative(homeworkDueAt(hw), now);
     const overdue = !done && relative === 'overdue';
@@ -30,7 +32,9 @@ export function HomeworkCard({ hw, now, onOpen }) {
             >
                 <span className={['font-medium', done ? 'line-through text-muted' : ''].join(' ')}>{hw.title}</span>
                 {cls && (
-                    <span className="px-2 py-0.5 text-xs font-medium rounded-full bg-accent-soft text-accent">
+                    <span
+                        className={['px-2 py-0.5 text-xs font-medium rounded-full', color.soft, color.text].join(' ')}
+                    >
                         {cls.name}
                     </span>
                 )}
