@@ -15,11 +15,15 @@ starts you over.
 
 - **Home screen** — today's classes first, with a live countdown to whatever's next (a class
   starting or homework due).
-- **Classes** — add a class with a name, optional location, and a weekly recurring schedule (pick
-  days, set one shared time or a time per day).
+- **Classes** — add a class with a name, color, optional location, and a weekly recurring
+  schedule (pick days, set one shared time or a time per day). Each class's color carries through
+  its cards, homework chips, and calendar blocks.
 - **Homework** — title, due date/time, optional notes (shown when you open an item, not on the
   card), linked to a class, mark complete/incomplete.
 - **Calendar** — a week-at-a-glance grid with `‹` `›` arrows to move between weeks.
+- **Focus** — a 25-minute-work / 5-minute-break Pomodoro timer that auto-advances, with a chime
+  and browser notification on each transition. Optionally connect Spotify to see what's playing
+  and have it auto-pause for breaks and resume for work — see below to set it up.
 - **Light/dark themes** — a light-blue accent in both; dark mode uses a near-black, Chrome-style
   palette. Toggle in the header or Settings; your choice is remembered.
 - **Google Classroom sync** (optional) — pull in your courses and assignments straight from the
@@ -59,6 +63,28 @@ Once configured, each user just clicks "Sign in with Google & sync" — no furth
 end. Access tokens are kept in memory only (never stored), and re-syncing never creates duplicate
 classes or assignments; if you've edited an imported item's title, notes, or due date by hand,
 re-syncing keeps your edit instead of overwriting it.
+
+## Setting up Spotify for Focus Sessions (optional)
+
+Also a one-time setup for whoever runs the app, and also fully client-side — no server of ours is
+involved, and like Google Classroom above, the rest of the app works fine without it. Note that
+Homeroom mirrors how Windows' own Focus Sessions works: it doesn't stream audio itself, it just
+reads what's currently playing and (Premium accounts only) remote-controls whatever device you
+already have Spotify open on.
+
+1. In the [Spotify Developer Dashboard](https://developer.spotify.com/dashboard), create an app.
+2. Add `http://localhost:3000/spotify/callback` (and your production URL's equivalent) as a
+   **Redirect URI** in the app's settings.
+3. Copy the client ID and put it in `.env.local`:
+
+   ```
+   NEXT_PUBLIC_SPOTIFY_CLIENT_ID=your-client-id-here
+   ```
+
+4. Restart the dev server (or rebuild). The Focus page will now show a "Connect Spotify" button.
+
+Playback control (pause/resume/skip) requires a **Spotify Premium** account — free accounts can
+still see what's currently playing, they just can't control it from Homeroom.
 
 ## Tech
 
