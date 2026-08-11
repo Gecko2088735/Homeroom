@@ -9,6 +9,7 @@ const navItems = [
     { linkText: 'Calendar', href: '/calendar' },
     { linkText: 'Homework', href: '/homework' },
     { linkText: 'Classes', href: '/classes' },
+    { linkText: 'Focus', href: '/focus' },
     { linkText: 'Settings', href: '/settings' }
 ];
 
@@ -17,7 +18,7 @@ export function Header() {
 
     return (
         <nav className="flex flex-wrap items-center gap-2 pt-6 pb-8 sm:gap-4 sm:pb-12">
-            <Link href="/" className="text-xl font-black tracking-tight text-accent no-underline">
+            <Link href="/" className="text-2xl font-black tracking-tight text-accent no-underline sm:text-3xl">
                 Homeroom
             </Link>
             <ul className="flex flex-wrap items-center gap-x-1 gap-y-1 ml-auto sm:gap-x-2">
