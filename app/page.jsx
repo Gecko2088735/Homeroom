@@ -2,6 +2,7 @@
 
 import Link from 'next/link';
 import { CountdownHero } from 'components/countdown-hero';
+import { EditHomeButton } from 'components/edit-home-button';
 import { HomeworkCard } from 'components/homework-card';
 import { classColor } from 'lib/colors';
 import { addDays, formatTime, homeworkDueAt, todaysClasses } from 'lib/dates';
@@ -19,6 +20,7 @@ export default function HomePage() {
 
     return (
         <div className="flex flex-col gap-8">
+            <EditHomeButton />
             <CountdownHero now={now} />
 
             <section className="flex flex-col gap-3">
