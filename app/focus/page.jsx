@@ -2,7 +2,6 @@
 
 import { useState } from 'react';
 import { FocusTimerPanel } from 'components/focus-timer-panel';
-import { SpotifyPanel } from 'components/spotify-panel';
 import { useStore } from 'lib/store';
 
 export default function FocusPage() {
@@ -29,11 +28,6 @@ export default function FocusPage() {
             )}
 
             <FocusTimerPanel classLabel={cls?.name} />
-
-            <section className="flex flex-col gap-3 p-5 border rounded-xl border-edge bg-surface">
-                <h3>Spotify</h3>
-                <SpotifyPanel />
-            </section>
         </div>
     );
 }

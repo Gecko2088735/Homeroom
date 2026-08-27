@@ -11,7 +11,6 @@ import {
     saveFocusSettings
 } from 'lib/focus-settings';
 import { notify, requestNotificationPermission } from 'lib/notify';
-import { pauseForBreak, resumeForWork } from 'lib/spotify';
 import { formatClock, useFocusTimer } from 'lib/use-focus-timer';
 
 const PHASE_LABEL = { work: 'Focus', break: 'Break' };
@@ -42,8 +41,6 @@ export function FocusTimerPanel({ classLabel }) {
                     ? `Back to work — ${minutes} minute${minutes === 1 ? '' : 's'} on the clock.`
                     : `Break time! Step away for ${minutes} minute${minutes === 1 ? '' : 's'}.`
             );
-            if (next === 'break') pauseForBreak();
-            else resumeForWork();
         }
     });
 
