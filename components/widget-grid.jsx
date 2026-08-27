@@ -44,7 +44,7 @@ export function WidgetGrid({ layout, onLayoutChange, editing, now }) {
     }
 
     return (
-        <div className="grid grid-cols-1 gap-4 sm:grid-cols-2">
+        <div className="grid grid-cols-1 gap-3 sm:grid-cols-2">
             {visibleLayout.map((id) => {
                 const Widget = WIDGET_COMPONENTS[id];
                 const meta = CATALOG_BY_ID[id];
@@ -80,7 +80,7 @@ export function WidgetGrid({ layout, onLayoutChange, editing, now }) {
                         )}
                         <div
                             className={
-                                editing ? 'h-full outline-2 outline-dashed outline-edge rounded-xl' : 'h-full'
+                                editing ? 'h-full outline-2 outline-dashed outline-edge rounded-lg' : 'h-full'
                             }
                         >
                             <Widget now={now} />
@@ -93,7 +93,7 @@ export function WidgetGrid({ layout, onLayoutChange, editing, now }) {
                 <button
                     type="button"
                     onClick={() => setPickerOpen(true)}
-                    className="flex items-center justify-center min-h-24 gap-2 text-sm font-semibold border-2 border-dashed rounded-xl cursor-pointer border-edge text-muted hover:border-accent hover:text-accent"
+                    className="flex items-center justify-center min-h-11 gap-2 text-sm font-semibold border-2 border-dashed rounded-lg cursor-pointer border-edge text-muted hover:border-accent hover:text-accent"
                 >
                     + Add widget
                 </button>

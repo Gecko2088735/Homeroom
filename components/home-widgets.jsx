@@ -25,12 +25,12 @@ function Section({ title, action, tone, children }) {
     return (
         <div
             className={[
-                'flex flex-col h-full gap-3 p-5 border rounded-xl bg-surface',
+                'flex flex-col h-full gap-2 px-4 py-3 border rounded-lg bg-surface',
                 tone === 'danger' ? 'border-danger' : 'border-edge'
             ].join(' ')}
         >
             <div className="flex items-center justify-between gap-3">
-                <h3>{title}</h3>
+                <h3 className="text-xs font-semibold tracking-wide uppercase text-muted">{title}</h3>
                 {action}
             </div>
             {children}
@@ -64,7 +64,7 @@ function TodaysClassesWidget({ now }) {
                             <div
                                 key={`${cls.id}-${meeting.day}-${meeting.startTime}`}
                                 className={[
-                                    'flex items-center gap-3 px-3 py-2 border-l-4 rounded-lg bg-background',
+                                    'flex items-center gap-2 px-2.5 py-1.5 border-l-4 rounded-md bg-background',
                                     current ? 'border-accent' : color.border,
                                     past ? 'opacity-50' : ''
                                 ].join(' ')}
@@ -72,19 +72,17 @@ function TodaysClassesWidget({ now }) {
                                 <span className="text-xs font-semibold shrink-0 text-muted min-w-14">
                                     {formatTime(meeting.startTime)}
                                 </span>
-                                <div className="flex flex-col gap-0.5 grow min-w-0">
-                                    <span className="font-medium truncate">{cls.name}</span>
-                                    {cls.classroomLink && (
-                                        <a
-                                            href={cls.classroomLink}
-                                            target="_blank"
-                                            rel="noopener noreferrer"
-                                            className="text-xs text-accent underline w-fit"
-                                        >
-                                            Open in Classroom ↗
-                                        </a>
-                                    )}
-                                </div>
+                                <span className="font-medium truncate grow">{cls.name}</span>
+                                {cls.classroomLink && (
+                                    <a
+                                        href={cls.classroomLink}
+                                        target="_blank"
+                                        rel="noopener noreferrer"
+                                        className="text-xs text-accent underline shrink-0"
+                                    >
+                                        Classroom ↗
+                                    </a>
+                                )}
                                 {current && (
                                     <span className="px-2 py-0.5 text-xs font-medium rounded-full bg-accent-soft text-accent shrink-0">
                                         now
@@ -144,13 +142,13 @@ function CurrentClassWidget({ now }) {
     return (
         <Section title="Right now">
             {current ? (
-                <div className="flex flex-col gap-1">
-                    <span className="text-lg font-bold">{current.cls.name}</span>
-                    <span className="text-sm text-muted">
-                        Ends {formatRelative(current.end, now)} ·{' '}
+                <p className="text-sm truncate">
+                    <span className="font-semibold">{current.cls.name}</span>{' '}
+                    <span className="text-muted">
+                        · ends {formatRelative(current.end, now)} ·{' '}
                         {formatTime(current.meeting.endTime || current.meeting.startTime)}
                     </span>
-                </div>
+                </p>
             ) : (
                 <p className="text-sm text-muted">No class right now.</p>
             )}
