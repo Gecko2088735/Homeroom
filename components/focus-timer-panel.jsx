@@ -1,23 +1,12 @@
 'use client';
 
-import { useEffect, useState } from 'react';
-import { playChime } from 'lib/chime';
-import {
-    loadFocusSettings,
-    MAX_BREAK_MINUTES,
-    MAX_WORK_MINUTES,
-    MIN_BREAK_MINUTES,
-    MIN_WORK_MINUTES,
-    saveFocusSettings
-} from 'lib/focus-settings';
-import { notify, requestNotificationPermission } from 'lib/notify';
-import { formatClock, useFocusTimer } from 'lib/use-focus-timer';
+import { MAX_BREAK_MINUTES, MAX_WORK_MINUTES, MIN_BREAK_MINUTES, MIN_WORK_MINUTES } from 'lib/focus-settings';
+import { useFocusContext } from 'lib/focus-context';
+import { formatClock } from 'lib/use-focus-timer';
 
 const PHASE_LABEL = { work: 'Focus', break: 'Break' };
 
 export function FocusTimerPanel({ classLabel }) {
-    const [notifyReady, setNotifyReady] = useState(false);
-
     const {
         phase,
         remaining,
@@ -29,53 +18,20 @@ export function FocusTimerPanel({ classLabel }) {
         pause,
         reset,
         skip,
-        setWorkSeconds,
-        setBreakSeconds
-    } = useFocusTimer({
-        onPhaseChange(next) {
-            playChime();
-            const minutes = Math.round((next === 'work' ? workSeconds : breakSeconds) / 60);
-            notify(
-                PHASE_LABEL[next],
-                next === 'work'
-                    ? `Back to work — ${minutes} minute${minutes === 1 ? '' : 's'} on the clock.`
-                    : `Break time! Step away for ${minutes} minute${minutes === 1 ? '' : 's'}.`
-            );
-        }
-    });
-
-    useEffect(() => {
-        const saved = loadFocusSettings();
-        if (saved) {
-            // Settings load client-side after mount (localStorage isn't available during
-            // SSR/prerender); this only ever runs once, before the timer has been started.
-            setWorkSeconds(saved.workMinutes * 60);
-            setBreakSeconds(saved.breakMinutes * 60);
-        }
-        // eslint-disable-next-line react-hooks/exhaustive-deps -- run once on mount only
-    }, []);
-
-    useEffect(() => {
-        if (notifyReady) requestNotificationPermission();
-    }, [notifyReady]);
-
-    function handleStart() {
-        setNotifyReady(true);
-        start();
-    }
+        updateWorkMinutes,
+        updateBreakMinutes
+    } = useFocusContext();
 
     function handleWorkMinutesChange(e) {
         const minutes = Number(e.target.value);
         if (!minutes || minutes < MIN_WORK_MINUTES || minutes > MAX_WORK_MINUTES) return;
-        setWorkSeconds(minutes * 60);
-        saveFocusSettings(minutes, Math.round(breakSeconds / 60));
+        updateWorkMinutes(minutes);
     }
 
     function handleBreakMinutesChange(e) {
         const minutes = Number(e.target.value);
         if (!minutes || minutes < MIN_BREAK_MINUTES || minutes > MAX_BREAK_MINUTES) return;
-        setBreakSeconds(minutes * 60);
-        saveFocusSettings(Math.round(workSeconds / 60), minutes);
+        updateBreakMinutes(minutes);
     }
 
     const progress = 1 - remaining / (phase === 'work' ? workSeconds : breakSeconds);
@@ -146,7 +102,7 @@ export function FocusTimerPanel({ classLabel }) {
 
             <div className="flex flex-wrap justify-center gap-3">
                 {!running ? (
-                    <button type="button" className="btn btn-lg" onClick={handleStart}>
+                    <button type="button" className="btn btn-lg" onClick={start}>
                         Start
                     </button>
                 ) : (

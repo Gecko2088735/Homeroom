@@ -13,8 +13,9 @@ starts you over.
 
 ## Features
 
-- **Home screen** — today's classes first, with a live countdown to whatever's next (a class
-  starting or homework due).
+- **Home screen** — a customizable grid of widgets (countdown, today's classes, due soon, a mini
+  Focus timer, and more). Tap the pencil button to drag widgets into a new order, remove them, or
+  add more from the picker; your layout is remembered.
 - **Classes** — add a class with a name, color, optional location, and a weekly recurring
   schedule (pick days, set one shared time or a time per day). Each class's color carries through
   its cards, homework chips, and calendar blocks.
