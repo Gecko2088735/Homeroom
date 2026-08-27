@@ -2,6 +2,7 @@
 
 import { classColor } from 'lib/colors';
 import { formatRelative, homeworkDueAt } from 'lib/dates';
+import { formatPercentage, isGraded, itemPercentage } from 'lib/grades';
 import { useStore } from 'lib/store';
 
 export function HomeworkCard({ hw, now, onOpen }) {
@@ -56,6 +57,11 @@ export function HomeworkCard({ hw, now, onOpen }) {
                         className={['px-2 py-0.5 text-xs font-medium rounded-full', color.soft, color.text].join(' ')}
                     >
                         {cls.name}
+                    </span>
+                )}
+                {isGraded(hw) && (
+                    <span className="px-2 py-0.5 text-xs font-medium rounded-full bg-accent-soft text-accent">
+                        {formatPercentage(itemPercentage(hw))}
                     </span>
                 )}
                 <span

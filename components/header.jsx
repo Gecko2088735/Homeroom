@@ -9,6 +9,7 @@ const navItems = [
     { linkText: 'Calendar', href: '/calendar' },
     { linkText: 'Homework', href: '/homework' },
     { linkText: 'Classes', href: '/classes' },
+    { linkText: 'Grades', href: '/grades' },
     { linkText: 'Focus', href: '/focus' },
     { linkText: 'Settings', href: '/settings' }
 ];

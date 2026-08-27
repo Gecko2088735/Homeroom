@@ -2,6 +2,7 @@
 
 import { Modal } from './modal';
 import { formatDueLabel } from 'lib/dates';
+import { formatPercentage, isGraded, itemPercentage } from 'lib/grades';
 import { PRIORITY_LABELS } from 'lib/priority';
 import { useStore } from 'lib/store';
 
@@ -46,6 +47,11 @@ export function HomeworkDetail({ hw, onClose, onEdit, onDelete }) {
                         </span>
                     )}
                 </p>
+                {isGraded(hw) && (
+                    <p className="font-medium">
+                        Score: {hw.grade.earned}/{hw.grade.possible} ({formatPercentage(itemPercentage(hw))})
+                    </p>
+                )}
                 {hw.notes ? (
                     <p className="whitespace-pre-wrap">{hw.notes}</p>
                 ) : (

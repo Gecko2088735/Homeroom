@@ -2,10 +2,14 @@
 
 import { classColor } from 'lib/colors';
 import { meetingSummary } from 'lib/dates';
+import { classPercentage, formatPercentage } from 'lib/grades';
+import { useStore } from 'lib/store';
 
 export function ClassCard({ cls, onEdit, onDelete }) {
+    const { homework } = useStore();
     const summary = meetingSummary(cls.meetings);
     const color = classColor(cls.color);
+    const percentage = classPercentage(homework.filter((h) => h.classId === cls.id));
 
     return (
         <div
@@ -25,6 +29,11 @@ export function ClassCard({ cls, onEdit, onDelete }) {
                         {cls.source === 'classroom' && (
                             <span className="px-2 py-0.5 text-xs font-medium rounded-full bg-accent-soft text-accent">
                                 Classroom
+                            </span>
+                        )}
+                        {percentage !== null && (
+                            <span className="px-2 py-0.5 text-xs font-medium rounded-full bg-accent-soft text-accent">
+                                {formatPercentage(percentage)}
                             </span>
                         )}
                     </div>

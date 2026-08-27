@@ -15,11 +15,18 @@ export function HomeworkForm({ hw, defaultClassId, onSubmit, onCancel }) {
         notes: hw?.notes ?? '',
         priority: hw?.priority ?? 'normal',
         isTest: hw?.isTest ?? false,
-        isGroupProject: hw?.isGroupProject ?? false
+        isGroupProject: hw?.isGroupProject ?? false,
+        gradeEarned: hw?.grade?.earned?.toString() ?? '',
+        gradePossible: hw?.grade?.possible?.toString() ?? ''
     }));
 
     function handleSubmit(e) {
         e.preventDefault();
+        const earned = form.gradeEarned.trim();
+        const possible = form.gradePossible.trim();
+        const grade = earned !== '' && possible !== '' && Number(possible) > 0
+            ? { earned: Number(earned), possible: Number(possible) }
+            : null;
         onSubmit({
             title: form.title.trim(),
             classId: form.classId || null,
@@ -28,7 +35,8 @@ export function HomeworkForm({ hw, defaultClassId, onSubmit, onCancel }) {
             notes: form.notes.trim(),
             priority: form.priority,
             isTest: form.isTest,
-            isGroupProject: form.isGroupProject
+            isGroupProject: form.isGroupProject,
+            grade
         });
     }
 
@@ -127,6 +135,33 @@ export function HomeworkForm({ hw, defaultClassId, onSubmit, onCancel }) {
                         onChange={(e) => setForm((f) => ({ ...f, isGroupProject: e.target.checked }))}
                     />
                     Group project
+                </label>
+            </div>
+
+            <div className="flex gap-3">
+                <label className="flex flex-col gap-1.5 text-sm font-medium grow">
+                    Score <span className="font-normal text-muted">(optional)</span>
+                    <input
+                        type="number"
+                        min="0"
+                        step="any"
+                        className="input"
+                        value={form.gradeEarned}
+                        onChange={(e) => setForm((f) => ({ ...f, gradeEarned: e.target.value }))}
+                        placeholder="e.g. 18"
+                    />
+                </label>
+                <label className="flex flex-col gap-1.5 text-sm font-medium grow">
+                    Out of <span className="font-normal text-muted">(optional)</span>
+                    <input
+                        type="number"
+                        min="0"
+                        step="any"
+                        className="input"
+                        value={form.gradePossible}
+                        onChange={(e) => setForm((f) => ({ ...f, gradePossible: e.target.value }))}
+                        placeholder="e.g. 20"
+                    />
                 </label>
             </div>
 
