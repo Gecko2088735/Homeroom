@@ -32,6 +32,11 @@ export function HomeworkCard({ hw, now, onOpen }) {
                 ].join(' ')}
             >
                 <span className={['font-medium', done ? 'line-through text-muted' : ''].join(' ')}>{hw.title}</span>
+                {hw.late && (
+                    <span className="px-2 py-0.5 text-xs font-medium rounded-full bg-danger-soft text-danger">
+                        Late
+                    </span>
+                )}
                 {hw.priority === 'high' && (
                     <span className="px-2 py-0.5 text-xs font-medium rounded-full bg-danger-soft text-danger">
                         High

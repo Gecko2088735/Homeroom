@@ -9,7 +9,7 @@ export function ClassCard({ cls, onEdit, onDelete }) {
     const { homework } = useStore();
     const summary = meetingSummary(cls.meetings);
     const color = classColor(cls.color);
-    const percentage = classPercentage(homework.filter((h) => h.classId === cls.id));
+    const percentage = classPercentage(cls, homework.filter((h) => h.classId === cls.id));
 
     return (
         <div

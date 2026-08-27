@@ -47,11 +47,15 @@ export function ClassroomSync() {
     async function sync() {
         setStatus({ state: 'syncing' });
         try {
-            const { courses, courseworkByCourse } = await fetchAllClassroomData();
+            const { courses, courseworkByCourse, submissionsByCourse, announcementsByCourse } =
+                await fetchAllClassroomData();
 
             let skippedUndated = 0;
             const mappedByCourse = {};
             for (const [courseId, items] of Object.entries(courseworkByCourse)) {
+                const submissionByCourseWork = new Map(
+                    (submissionsByCourse[courseId] ?? []).map((s) => [s.courseWorkId, s])
+                );
                 mappedByCourse[courseId] = [];
                 for (const item of items) {
                     const due = mapCourseWorkDue(item);
@@ -59,17 +63,41 @@ export function ClassroomSync() {
                         skippedUndated += 1;
                         continue;
                     }
+                    const submission = submissionByCourseWork.get(item.id);
+                    const maxPoints = typeof item.maxPoints === 'number' ? item.maxPoints : null;
+                    const assignedGrade =
+                        typeof submission?.assignedGrade === 'number' ? submission.assignedGrade : null;
                     mappedByCourse[courseId].push({
                         id: item.id,
                         title: item.title ?? 'Untitled assignment',
                         notes: item.description ?? '',
                         alternateLink: item.alternateLink ?? null,
+                        maxPoints,
+                        gradeCategoryId: item.gradeCategory?.id ?? null,
+                        late: submission?.late === true,
+                        grade: assignedGrade !== null && maxPoints ? { earned: assignedGrade, possible: maxPoints } : null,
                         ...due
                     });
                 }
             }
 
-            const counts = store.importFromClassroom({ courses, courseworkByCourse: mappedByCourse });
+            const mappedAnnouncementsByCourse = {};
+            for (const [courseId, items] of Object.entries(announcementsByCourse)) {
+                mappedAnnouncementsByCourse[courseId] = items
+                    .filter((a) => a.state === 'PUBLISHED')
+                    .map((a) => ({
+                        id: a.id,
+                        text: a.text ?? '',
+                        alternateLink: a.alternateLink ?? null,
+                        creationTime: a.creationTime ?? null
+                    }));
+            }
+
+            const counts = store.importFromClassroom({
+                courses,
+                courseworkByCourse: mappedByCourse,
+                announcementsByCourse: mappedAnnouncementsByCourse
+            });
             setStatus({ state: 'done', counts: { ...counts, skippedUndated } });
         } catch (error) {
             setStatus({ state: 'error', message: error.message });
@@ -93,6 +121,8 @@ export function ClassroomSync() {
                     {status.counts.added} new {status.counts.added === 1 ? 'assignment' : 'assignments'}
                     {status.counts.updated > 0 && `, ${status.counts.updated} updated`}
                     {status.counts.kept > 0 && `, ${status.counts.kept} kept your edits`}
+                    {status.counts.newAnnouncements > 0 &&
+                        `, ${status.counts.newAnnouncements} new ${status.counts.newAnnouncements === 1 ? 'announcement' : 'announcements'}`}
                     {status.counts.skippedUndated > 0 &&
                         ` (${status.counts.skippedUndated} without a due date skipped)`}
                     . Re-syncing never duplicates items.

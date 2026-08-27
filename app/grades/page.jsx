@@ -32,7 +32,7 @@ export default function GradesPage() {
 
 function ClassGrades({ cls, homework }) {
     const graded = homework.filter(isGraded).sort((a, b) => b.dueDate.localeCompare(a.dueDate));
-    const percentage = classPercentage(homework);
+    const percentage = classPercentage(cls, homework);
     const color = cls ? classColor(cls.color) : null;
 
     return (

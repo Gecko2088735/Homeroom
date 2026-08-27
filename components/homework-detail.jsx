@@ -26,6 +26,11 @@ export function HomeworkDetail({ hw, onClose, onEdit, onDelete }) {
                             From Google Classroom
                         </span>
                     )}
+                    {hw.late && (
+                        <span className="px-2 py-0.5 text-xs font-medium rounded-full bg-danger-soft text-danger">
+                            Marked late in Classroom
+                        </span>
+                    )}
                     {hw.priority !== 'normal' && (
                         <span
                             className={[

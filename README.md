@@ -24,10 +24,16 @@ starts you over.
 - **Calendar** — a week-at-a-glance grid with `‹` `›` arrows to move between weeks.
 - **Focus** — a configurable-length Pomodoro timer (25/5 minutes by default) that auto-advances,
   with a chime and browser notification on each transition.
+- **Grades** — enter an optional score on any homework item; percentages normalize different
+  scales (out of 20, out of 100, ...) so classes compare fairly. Shown on the homework card,
+  class cards, and a dedicated Grades page with a per-class breakdown.
 - **Light/dark themes** — a light-blue accent in both; dark mode uses a near-black, Chrome-style
   palette. Toggle in the header or Settings; your choice is remembered.
 - **Google Classroom sync** (optional) — pull in your courses and assignments straight from the
-  browser. See below to set it up.
+  browser, including each class's announcements, grades already assigned in Classroom (which
+  auto-fill this app's own Grades feature, using the class's real weighted categories when it has
+  them), and an automatic "High priority" flag on anything Classroom marks late. See below to set
+  it up.
 
 ## Developing locally
 
@@ -61,8 +67,15 @@ that browser's `localStorage`. No server of ours is involved.
 
 Once configured, each user just clicks "Sign in with Google & sync" — no further setup on their
 end. Access tokens are kept in memory only (never stored), and re-syncing never creates duplicate
-classes or assignments; if you've edited an imported item's title, notes, or due date by hand,
-re-syncing keeps your edit instead of overwriting it.
+classes or assignments; if you've edited an imported item's title, notes, due date, or grade by
+hand, re-syncing keeps your edit instead of overwriting it.
+
+Homeroom requests three read-only scopes: `classroom.courses.readonly` and
+`classroom.coursework.me.readonly` (your courses, assignments, your own submission status and
+grades) plus `classroom.announcements.readonly` (each class's announcement feed). If you'd set
+this up before announcements/late-flagging/weighted-grades existed, the new scope means the next
+"Sign in with Google & sync" click will show Google's consent screen again for that one added
+permission — that's expected, and only needs to happen once.
 
 ## Tech
 

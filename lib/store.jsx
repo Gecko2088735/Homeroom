@@ -1,6 +1,7 @@
 'use client';
 
 import { createContext, useContext, useEffect, useState } from 'react';
+import { applyClassroomImport } from './classroom-merge';
 import { nextClassColor } from './colors';
 import { emptyData, loadData, saveData } from './storage';
 
@@ -31,6 +32,7 @@ export function StoreProvider({ children }) {
         ready,
         classes: current.classes,
         homework: current.homework,
+        announcements: current.announcements,
 
         addClass(fields) {
             const cls = {
@@ -77,6 +79,9 @@ export function StoreProvider({ children }) {
                 isTest: false,
                 isGroupProject: false,
                 grade: null,
+                late: false,
+                maxPoints: null,
+                gradeCategoryId: null,
                 source: 'manual',
                 externalId: null,
                 lastSync: null,
@@ -120,98 +125,6 @@ export function StoreProvider({ children }) {
     };
 
     return <StoreContext.Provider value={value}>{children}</StoreContext.Provider>;
-}
-
-// Merge freshly fetched Classroom data into local state.
-// - Classes dedupe on externalId (course id); homework on externalId (`courseId/courseWorkId`).
-// - Per-field three-way merge via lastSync: a field the user never edited follows Classroom,
-//   an edited field keeps the local value. completedAt/classId are never touched.
-// - Items deleted in Classroom are left alone.
-export function applyClassroomImport(d, { courses, courseworkByCourse }) {
-    const stamp = now();
-    const classes = [...d.classes];
-    const homework = [...d.homework];
-    const classIdByCourse = new Map();
-    const counts = { newClasses: 0, added: 0, updated: 0, kept: 0 };
-
-    for (const course of courses) {
-        const existingIdx = classes.findIndex((c) => c.externalId === course.id);
-        if (existingIdx !== -1) {
-            classIdByCourse.set(course.id, classes[existingIdx].id);
-            if (classes[existingIdx].classroomLink !== course.alternateLink) {
-                classes[existingIdx] = { ...classes[existingIdx], classroomLink: course.alternateLink ?? null };
-            }
-        } else {
-            const cls = {
-                id: crypto.randomUUID(),
-                name: course.name,
-                location: course.room ?? '',
-                meetings: [],
-                color: nextClassColor(classes),
-                classroomLink: course.alternateLink ?? null,
-                source: 'classroom',
-                externalId: course.id,
-                createdAt: stamp,
-                updatedAt: stamp
-            };
-            classes.push(cls);
-            classIdByCourse.set(course.id, cls.id);
-            counts.newClasses += 1;
-        }
-    }
-
-    for (const [courseId, items] of Object.entries(courseworkByCourse)) {
-        for (const item of items) {
-            const externalId = `${courseId}/${item.id}`;
-            const fresh = { title: item.title, notes: item.notes, dueDate: item.dueDate, dueTime: item.dueTime };
-            const idx = homework.findIndex((h) => h.externalId === externalId);
-
-            if (idx === -1) {
-                homework.push({
-                    id: crypto.randomUUID(),
-                    ...fresh,
-                    classId: classIdByCourse.get(courseId) ?? null,
-                    completedAt: null,
-                    priority: 'normal',
-                    isTest: false,
-                    isGroupProject: false,
-                    grade: null,
-                    classroomLink: item.alternateLink ?? null,
-                    source: 'classroom',
-                    externalId,
-                    lastSync: fresh,
-                    createdAt: stamp,
-                    updatedAt: stamp
-                });
-                counts.added += 1;
-                continue;
-            }
-
-            const existing = homework[idx];
-            const base = existing.lastSync ?? {};
-            const merged = { ...existing };
-            let changed = false;
-            let keptEdit = false;
-            for (const field of ['title', 'notes', 'dueDate', 'dueTime']) {
-                if (existing[field] === base[field]) {
-                    if (merged[field] !== fresh[field]) {
-                        merged[field] = fresh[field];
-                        changed = true;
-                    }
-                } else {
-                    keptEdit = true;
-                }
-            }
-            merged.lastSync = fresh;
-            merged.classroomLink = item.alternateLink ?? null;
-            merged.updatedAt = changed ? stamp : existing.updatedAt;
-            homework[idx] = merged;
-            if (changed) counts.updated += 1;
-            else if (keptEdit) counts.kept += 1;
-        }
-    }
-
-    return { data: { ...d, classes, homework }, counts };
 }
 
 export function useStore() {

@@ -10,6 +10,7 @@ const navItems = [
     { linkText: 'Homework', href: '/homework' },
     { linkText: 'Classes', href: '/classes' },
     { linkText: 'Grades', href: '/grades' },
+    { linkText: 'Announcements', href: '/announcements' },
     { linkText: 'Focus', href: '/focus' },
     { linkText: 'Settings', href: '/settings' }
 ];
