@@ -31,6 +31,26 @@ export function HomeworkCard({ hw, now, onOpen }) {
                 ].join(' ')}
             >
                 <span className={['font-medium', done ? 'line-through text-muted' : ''].join(' ')}>{hw.title}</span>
+                {hw.priority === 'high' && (
+                    <span className="px-2 py-0.5 text-xs font-medium rounded-full bg-danger-soft text-danger">
+                        High
+                    </span>
+                )}
+                {hw.priority === 'low' && (
+                    <span className="px-2 py-0.5 text-xs font-medium rounded-full bg-surface-hover text-muted">
+                        Low
+                    </span>
+                )}
+                {hw.isTest && (
+                    <span className="px-2 py-0.5 text-xs font-medium rounded-full bg-accent-soft text-accent">
+                        Test
+                    </span>
+                )}
+                {hw.isGroupProject && (
+                    <span className="px-2 py-0.5 text-xs font-medium rounded-full bg-accent-soft text-accent">
+                        Group
+                    </span>
+                )}
                 {cls && (
                     <span
                         className={['px-2 py-0.5 text-xs font-medium rounded-full', color.soft, color.text].join(' ')}

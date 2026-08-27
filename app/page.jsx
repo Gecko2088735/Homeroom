@@ -5,6 +5,7 @@ import { CountdownHero } from 'components/countdown-hero';
 import { HomeworkCard } from 'components/homework-card';
 import { classColor } from 'lib/colors';
 import { addDays, formatTime, homeworkDueAt, todaysClasses } from 'lib/dates';
+import { sortHomeworkByPriority } from 'lib/priority';
 import { useStore } from 'lib/store';
 import { useNow } from 'lib/use-now';
 
@@ -14,9 +15,7 @@ export default function HomePage() {
 
     const today = todaysClasses(store.classes, now);
     const weekFromNow = addDays(now, 7);
-    const dueSoon = store.homework
-        .filter((h) => !h.completedAt && homeworkDueAt(h) <= weekFromNow)
-        .sort((a, b) => homeworkDueAt(a) - homeworkDueAt(b));
+    const dueSoon = sortHomeworkByPriority(store.homework.filter((h) => !h.completedAt && homeworkDueAt(h) <= weekFromNow));
 
     return (
         <div className="flex flex-col gap-8">

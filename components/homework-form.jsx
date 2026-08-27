@@ -2,6 +2,7 @@
 
 import { useState } from 'react';
 import { toDateInputValue } from 'lib/dates';
+import { PRIORITIES } from 'lib/priority';
 import { useStore } from 'lib/store';
 
 export function HomeworkForm({ hw, defaultClassId, onSubmit, onCancel }) {
@@ -11,7 +12,10 @@ export function HomeworkForm({ hw, defaultClassId, onSubmit, onCancel }) {
         classId: hw?.classId ?? defaultClassId ?? '',
         dueDate: hw?.dueDate ?? toDateInputValue(new Date()),
         dueTime: hw?.dueTime ?? '',
-        notes: hw?.notes ?? ''
+        notes: hw?.notes ?? '',
+        priority: hw?.priority ?? 'normal',
+        isTest: hw?.isTest ?? false,
+        isGroupProject: hw?.isGroupProject ?? false
     }));
 
     function handleSubmit(e) {
@@ -21,7 +25,10 @@ export function HomeworkForm({ hw, defaultClassId, onSubmit, onCancel }) {
             classId: form.classId || null,
             dueDate: form.dueDate,
             dueTime: form.dueTime || null,
-            notes: form.notes.trim()
+            notes: form.notes.trim(),
+            priority: form.priority,
+            isTest: form.isTest,
+            isGroupProject: form.isGroupProject
         });
     }
 
@@ -74,6 +81,52 @@ export function HomeworkForm({ hw, defaultClassId, onSubmit, onCancel }) {
                         value={form.dueTime}
                         onChange={(e) => setForm((f) => ({ ...f, dueTime: e.target.value }))}
                     />
+                </label>
+            </div>
+
+            <fieldset className="flex flex-col gap-2">
+                <legend className="text-sm font-medium">Priority</legend>
+                <div className="flex flex-wrap gap-2">
+                    {PRIORITIES.map((p) => {
+                        const selected = form.priority === p;
+                        return (
+                            <button
+                                key={p}
+                                type="button"
+                                onClick={() => setForm((f) => ({ ...f, priority: p }))}
+                                aria-pressed={selected}
+                                className={[
+                                    'min-h-11 px-3.5 rounded-lg border text-sm font-medium cursor-pointer capitalize transition-colors',
+                                    selected
+                                        ? 'bg-accent text-accent-foreground border-accent'
+                                        : 'bg-surface text-muted border-edge hover:bg-surface-hover'
+                                ].join(' ')}
+                            >
+                                {p}
+                            </button>
+                        );
+                    })}
+                </div>
+            </fieldset>
+
+            <div className="flex flex-col gap-2">
+                <label className="flex items-center gap-2 min-h-11 text-sm cursor-pointer">
+                    <input
+                        type="checkbox"
+                        className="w-5 h-5 cursor-pointer accent-accent"
+                        checked={form.isTest}
+                        onChange={(e) => setForm((f) => ({ ...f, isTest: e.target.checked }))}
+                    />
+                    Test or major project
+                </label>
+                <label className="flex items-center gap-2 min-h-11 text-sm cursor-pointer">
+                    <input
+                        type="checkbox"
+                        className="w-5 h-5 cursor-pointer accent-accent"
+                        checked={form.isGroupProject}
+                        onChange={(e) => setForm((f) => ({ ...f, isGroupProject: e.target.checked }))}
+                    />
+                    Group project
                 </label>
             </div>
 

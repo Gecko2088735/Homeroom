@@ -63,6 +63,7 @@ export function ClassroomSync() {
                         id: item.id,
                         title: item.title ?? 'Untitled assignment',
                         notes: item.description ?? '',
+                        alternateLink: item.alternateLink ?? null,
                         ...due
                     });
                 }

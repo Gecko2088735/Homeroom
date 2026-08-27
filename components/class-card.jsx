@@ -28,6 +28,16 @@ export function ClassCard({ cls, onEdit, onDelete }) {
                             </span>
                         )}
                     </div>
+                    {cls.classroomLink && (
+                        <a
+                            href={cls.classroomLink}
+                            target="_blank"
+                            rel="noopener noreferrer"
+                            className="text-sm text-accent underline w-fit"
+                        >
+                            Open in Classroom ↗
+                        </a>
+                    )}
                     {summary ? (
                         <p className="text-sm text-muted">{summary}</p>
                     ) : (

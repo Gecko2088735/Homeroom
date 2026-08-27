@@ -73,6 +73,9 @@ export function StoreProvider({ children }) {
                 dueDate: '',
                 dueTime: null,
                 completedAt: null,
+                priority: 'normal',
+                isTest: false,
+                isGroupProject: false,
                 source: 'manual',
                 externalId: null,
                 lastSync: null,
@@ -131,9 +134,12 @@ export function applyClassroomImport(d, { courses, courseworkByCourse }) {
     const counts = { newClasses: 0, added: 0, updated: 0, kept: 0 };
 
     for (const course of courses) {
-        const existing = classes.find((c) => c.externalId === course.id);
-        if (existing) {
-            classIdByCourse.set(course.id, existing.id);
+        const existingIdx = classes.findIndex((c) => c.externalId === course.id);
+        if (existingIdx !== -1) {
+            classIdByCourse.set(course.id, classes[existingIdx].id);
+            if (classes[existingIdx].classroomLink !== course.alternateLink) {
+                classes[existingIdx] = { ...classes[existingIdx], classroomLink: course.alternateLink ?? null };
+            }
         } else {
             const cls = {
                 id: crypto.randomUUID(),
@@ -141,6 +147,7 @@ export function applyClassroomImport(d, { courses, courseworkByCourse }) {
                 location: course.room ?? '',
                 meetings: [],
                 color: nextClassColor(classes),
+                classroomLink: course.alternateLink ?? null,
                 source: 'classroom',
                 externalId: course.id,
                 createdAt: stamp,
@@ -164,6 +171,10 @@ export function applyClassroomImport(d, { courses, courseworkByCourse }) {
                     ...fresh,
                     classId: classIdByCourse.get(courseId) ?? null,
                     completedAt: null,
+                    priority: 'normal',
+                    isTest: false,
+                    isGroupProject: false,
+                    classroomLink: item.alternateLink ?? null,
                     source: 'classroom',
                     externalId,
                     lastSync: fresh,
@@ -190,6 +201,7 @@ export function applyClassroomImport(d, { courses, courseworkByCourse }) {
                 }
             }
             merged.lastSync = fresh;
+            merged.classroomLink = item.alternateLink ?? null;
             merged.updatedAt = changed ? stamp : existing.updatedAt;
             homework[idx] = merged;
             if (changed) counts.updated += 1;

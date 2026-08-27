@@ -7,6 +7,7 @@ import { HomeworkDetail } from 'components/homework-detail';
 import { HomeworkForm } from 'components/homework-form';
 import { Modal } from 'components/modal';
 import { homeworkDueAt } from 'lib/dates';
+import { sortHomeworkByPriority } from 'lib/priority';
 import { useStore } from 'lib/store';
 import { useNow } from 'lib/use-now';
 
@@ -20,7 +21,7 @@ export default function HomeworkPage() {
     const [showCompleted, setShowCompleted] = useState(false);
 
     const detail = store.homework.find((h) => h.id === detailId) ?? null;
-    const incomplete = store.homework.filter((h) => !h.completedAt).sort((a, b) => homeworkDueAt(a) - homeworkDueAt(b));
+    const incomplete = sortHomeworkByPriority(store.homework.filter((h) => !h.completedAt));
     const completed = store.homework.filter((h) => h.completedAt).sort((a, b) => homeworkDueAt(b) - homeworkDueAt(a));
 
     return (
