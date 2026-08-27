@@ -15,7 +15,9 @@ starts you over.
 
 - **Home screen** — a customizable grid of widgets (countdown, today's classes, due soon, a mini
   Focus timer, and more). Tap the pencil button to drag widgets into a new order, remove them, or
-  add more from the picker; your layout is remembered.
+  add more from the picker; your layout is remembered. Optionally turn on "Auto-adjust home
+  screen" in Settings to have it switch itself between a class view and a homework view based on
+  whether you're before/during a class or in a gap or done for the day.
 - **Classes** — add a class with a name, color, optional location, and a weekly recurring
   schedule (pick days, set one shared time or a time per day). Each class's color carries through
   its cards, homework chips, and calendar blocks.
