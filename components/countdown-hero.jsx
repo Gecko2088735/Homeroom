@@ -6,16 +6,17 @@ import { useStore } from 'lib/store';
 export function CountdownHero({ now }) {
     const { ready, classes, homework } = useStore();
     if (!ready) {
-        return <div className="h-11 border bg-surface border-edge rounded-lg animate-pulse" aria-hidden="true" />;
+        return <div className="h-28 border bg-surface border-edge rounded-xl animate-pulse" aria-hidden="true" />;
     }
 
     const next = nextUpcoming(classes, homework, now);
 
     if (!next) {
         return (
-            <div className="flex items-center gap-3 px-4 py-3 border bg-surface border-edge rounded-lg">
-                <span className="text-xs font-semibold tracking-wide uppercase text-muted shrink-0">Up next</span>
-                <span className="font-semibold truncate">Nothing coming up 🎉</span>
+            <div className="flex flex-col gap-1 px-6 py-6 border bg-surface border-edge rounded-xl">
+                <p className="text-sm font-medium text-muted">Up next</p>
+                <p className="text-2xl font-bold">Nothing coming up 🎉</p>
+                <p className="text-sm text-muted">Add classes or homework to see your next deadline here.</p>
             </div>
         );
     }
@@ -39,10 +40,10 @@ export function CountdownHero({ now }) {
     }
 
     return (
-        <div className="flex items-center gap-3 px-4 py-3 text-white bg-accent rounded-lg dark:text-accent-foreground">
-            <span className="text-xs font-semibold tracking-wide uppercase opacity-80 shrink-0">Up next</span>
-            <span className="font-semibold truncate">{headline}</span>
-            {detail && <span className="ml-auto text-xs opacity-80 shrink-0">{detail}</span>}
+        <div className="flex flex-col gap-1 px-6 py-6 text-white bg-accent rounded-xl dark:text-accent-foreground">
+            <p className="text-sm font-medium opacity-80">Up next</p>
+            <p className="text-2xl font-bold sm:text-3xl">{headline}</p>
+            {detail && <p className="text-sm opacity-80">{detail}</p>}
         </div>
     );
 }

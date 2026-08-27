@@ -44,7 +44,7 @@ export function WidgetGrid({ layout, onLayoutChange, editing, now }) {
     }
 
     return (
-        <div className="grid grid-cols-1 gap-3 sm:grid-cols-2">
+        <div className="flex flex-col gap-8">
             {visibleLayout.map((id) => {
                 const Widget = WIDGET_COMPONENTS[id];
                 const meta = CATALOG_BY_ID[id];
@@ -78,11 +78,7 @@ export function WidgetGrid({ layout, onLayoutChange, editing, now }) {
                                 </svg>
                             </button>
                         )}
-                        <div
-                            className={
-                                editing ? 'h-full outline-2 outline-dashed outline-edge rounded-lg' : 'h-full'
-                            }
-                        >
+                        <div className={editing ? 'p-3 outline-2 outline-dashed outline-edge rounded-lg' : ''}>
                             <Widget now={now} />
                         </div>
                     </div>

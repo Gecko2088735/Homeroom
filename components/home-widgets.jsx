@@ -23,14 +23,9 @@ import { formatClock } from 'lib/use-focus-timer';
 
 function Section({ title, action, tone, children }) {
     return (
-        <div
-            className={[
-                'flex flex-col h-full gap-2 px-4 py-3 border rounded-lg bg-surface',
-                tone === 'danger' ? 'border-danger' : 'border-edge'
-            ].join(' ')}
-        >
+        <div className="flex flex-col gap-3">
             <div className="flex items-center justify-between gap-3">
-                <h3 className="text-xs font-semibold tracking-wide uppercase text-muted">{title}</h3>
+                <h2 className={tone === 'danger' ? 'text-danger' : ''}>{title}</h2>
                 {action}
             </div>
             {children}
@@ -64,7 +59,7 @@ function TodaysClassesWidget({ now }) {
                             <div
                                 key={`${cls.id}-${meeting.day}-${meeting.startTime}`}
                                 className={[
-                                    'flex items-center gap-2 px-2.5 py-1.5 border-l-4 rounded-md bg-background',
+                                    'flex items-center gap-3 px-3 py-2 border-l-4 rounded-lg bg-surface',
                                     current ? 'border-accent' : color.border,
                                     past ? 'opacity-50' : ''
                                 ].join(' ')}
