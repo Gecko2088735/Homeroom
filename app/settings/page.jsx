@@ -44,14 +44,16 @@ export default function SettingsPage() {
                         while it&apos;s on.
                     </p>
                 </div>
-                <label className="inline-flex items-center shrink-0">
+                <label className="relative inline-flex items-center shrink-0 cursor-pointer">
                     <input
                         type="checkbox"
-                        className="w-6 h-6 cursor-pointer accent-accent"
+                        className="sr-only peer"
                         checked={autoShift}
                         onChange={toggleAutoShift}
                         aria-label="Auto-adjust home screen by time of day"
                     />
+                    <span className="pointer-events-none w-11 h-6 rounded-full bg-surface-hover border border-edge transition-colors peer-checked:bg-accent peer-checked:border-accent" />
+                    <span className="pointer-events-none absolute left-1 top-1 w-4 h-4 rounded-full bg-white shadow transition-[left] peer-checked:left-6" />
                 </label>
             </section>
 

@@ -1,6 +1,7 @@
 'use client';
 
 import { useState } from 'react';
+import { AnnouncementsList } from 'components/announcements-list';
 import { ConfirmDialog } from 'components/confirm-dialog';
 import { HomeworkCard } from 'components/homework-card';
 import { HomeworkDetail } from 'components/homework-detail';
@@ -19,6 +20,7 @@ export default function HomeworkPage() {
     const [detailId, setDetailId] = useState(null);
     const [deleting, setDeleting] = useState(null);
     const [showCompleted, setShowCompleted] = useState(false);
+    const [showAnnouncements, setShowAnnouncements] = useState(false);
 
     const detail = store.homework.find((h) => h.id === detailId) ?? null;
     const incomplete = sortHomeworkByPriority(store.homework.filter((h) => !h.completedAt));
@@ -63,6 +65,19 @@ export default function HomeworkPage() {
                         </div>
                     )}
                 </>
+            )}
+
+            {store.ready && store.announcements.length > 0 && (
+                <div className="flex flex-col gap-3">
+                    <button
+                        type="button"
+                        onClick={() => setShowAnnouncements((s) => !s)}
+                        className="self-start text-sm font-medium cursor-pointer text-muted hover:text-foreground min-h-11"
+                    >
+                        {showAnnouncements ? '▾' : '▸'} Announcements ({store.announcements.length})
+                    </button>
+                    {showAnnouncements && <AnnouncementsList />}
+                </div>
             )}
 
             <Modal open={adding} onClose={() => setAdding(false)} title="Add homework">

@@ -5,13 +5,11 @@ import { usePathname } from 'next/navigation';
 import { ThemeToggle } from './theme-toggle';
 
 const navItems = [
-    { linkText: 'Home', href: '/' },
-    { linkText: 'Calendar', href: '/calendar' },
     { linkText: 'Homework', href: '/homework' },
     { linkText: 'Classes', href: '/classes' },
-    { linkText: 'Grades', href: '/grades' },
-    { linkText: 'Announcements', href: '/announcements' },
     { linkText: 'Focus', href: '/focus' },
+    { linkText: 'Calendar', href: '/calendar' },
+    { linkText: 'Grades', href: '/grades' },
     { linkText: 'Settings', href: '/settings' }
 ];
 
