@@ -12,7 +12,8 @@ export const metadata = {
     description: 'Track your class schedule and homework — all saved on this device.'
 };
 
-const themeInitScript = `try{var t=localStorage.getItem('homeroom:theme');if(t==='dark'||(!t&&matchMedia('(prefers-color-scheme: dark)').matches))document.documentElement.classList.add('dark')}catch(e){}`;
+// Dark is the default look — it only stays light once the user explicitly picks it via the toggle.
+const themeInitScript = `try{if(localStorage.getItem('homeroom:theme')!=='light')document.documentElement.classList.add('dark')}catch(e){}`;
 
 export default function RootLayout({ children }) {
     return (
