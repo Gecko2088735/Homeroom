@@ -75,8 +75,8 @@ export default function PrivacyPage() {
                 <h3>Contact</h3>
                 <p className="text-sm text-muted">
                     Questions about this policy or the app can be sent to{' '}
-                    <a href="mailto:alexhsuxd@gmail.com" className="text-accent underline">
-                        alexhsuxd@gmail.com
+                    <a href="mailto:myhomeroomsupport@gmail.com" className="text-accent underline">
+                        myhomeroomsupport@gmail.com
                     </a>
                     .
                 </p>
