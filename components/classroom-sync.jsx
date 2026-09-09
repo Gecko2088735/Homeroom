@@ -1,13 +1,11 @@
 'use client';
 
-import { useState } from 'react';
 import { Alert } from './alert';
-import { fetchAllClassroomData, isConfigured, mapCourseWorkDue } from 'lib/classroom';
-import { useStore } from 'lib/store';
+import { isConfigured } from 'lib/classroom';
+import { useClassroomSync } from 'lib/classroom-sync-context';
 
 export function ClassroomSync() {
-    const store = useStore();
-    const [status, setStatus] = useState({ state: 'idle' });
+    const { status, syncNow } = useClassroomSync();
 
     if (!isConfigured()) {
         return (
@@ -44,74 +42,20 @@ export function ClassroomSync() {
         );
     }
 
-    async function sync() {
-        setStatus({ state: 'syncing' });
-        try {
-            const { courses, courseworkByCourse, submissionsByCourse, announcementsByCourse } =
-                await fetchAllClassroomData();
-
-            let skippedUndated = 0;
-            const mappedByCourse = {};
-            for (const [courseId, items] of Object.entries(courseworkByCourse)) {
-                const submissionByCourseWork = new Map(
-                    (submissionsByCourse[courseId] ?? []).map((s) => [s.courseWorkId, s])
-                );
-                mappedByCourse[courseId] = [];
-                for (const item of items) {
-                    const due = mapCourseWorkDue(item);
-                    if (!due) {
-                        skippedUndated += 1;
-                        continue;
-                    }
-                    const submission = submissionByCourseWork.get(item.id);
-                    const maxPoints = typeof item.maxPoints === 'number' ? item.maxPoints : null;
-                    const assignedGrade =
-                        typeof submission?.assignedGrade === 'number' ? submission.assignedGrade : null;
-                    mappedByCourse[courseId].push({
-                        id: item.id,
-                        title: item.title ?? 'Untitled assignment',
-                        notes: item.description ?? '',
-                        alternateLink: item.alternateLink ?? null,
-                        maxPoints,
-                        gradeCategoryId: item.gradeCategory?.id ?? null,
-                        late: submission?.late === true,
-                        grade: assignedGrade !== null && maxPoints ? { earned: assignedGrade, possible: maxPoints } : null,
-                        ...due
-                    });
-                }
-            }
-
-            const mappedAnnouncementsByCourse = {};
-            for (const [courseId, items] of Object.entries(announcementsByCourse)) {
-                mappedAnnouncementsByCourse[courseId] = items
-                    .filter((a) => a.state === 'PUBLISHED')
-                    .map((a) => ({
-                        id: a.id,
-                        text: a.text ?? '',
-                        alternateLink: a.alternateLink ?? null,
-                        creationTime: a.creationTime ?? null
-                    }));
-            }
-
-            const counts = store.importFromClassroom({
-                courses,
-                courseworkByCourse: mappedByCourse,
-                announcementsByCourse: mappedAnnouncementsByCourse
-            });
-            setStatus({ state: 'done', counts: { ...counts, skippedUndated } });
-        } catch (error) {
-            setStatus({ state: 'error', message: error.message });
-        }
-    }
-
     return (
         <div className="flex flex-col gap-3">
             <p className="text-sm text-muted">
                 Pull your classes and assignments straight from Google Classroom. Your data stays on this device —
-                Google is only contacted to read your coursework.
+                Google is only contacted to read your coursework. Once connected, Homeroom also quietly re-syncs
+                every 10 minutes and whenever you move between pages, with no extra prompts.
             </p>
             <div>
-                <button type="button" className="btn" onClick={sync} disabled={status.state === 'syncing'}>
+                <button
+                    type="button"
+                    className="btn"
+                    onClick={() => syncNow({ interactive: true })}
+                    disabled={status.state === 'syncing'}
+                >
                     {status.state === 'syncing' ? 'Syncing…' : 'Sign in with Google & sync'}
                 </button>
             </div>

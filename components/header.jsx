@@ -2,7 +2,9 @@
 
 import Link from 'next/link';
 import { usePathname } from 'next/navigation';
+import { useEffect, useRef } from 'react';
 import { ThemeToggle } from './theme-toggle';
+import { useClassroomSync } from 'lib/classroom-sync-context';
 
 const navItems = [
     { linkText: 'Homework', href: '/homework' },
@@ -15,10 +17,25 @@ const navItems = [
 
 export function Header() {
     const pathname = usePathname();
+    const { syncNow } = useClassroomSync();
+    const mountedRef = useRef(false);
+
+    useEffect(() => {
+        if (!mountedRef.current) {
+            // Skip the very first load — only re-sync on client-side navigations after that.
+            mountedRef.current = true;
+            return;
+        }
+        syncNow({ interactive: false });
+    }, [pathname, syncNow]);
 
     return (
         <nav className="flex flex-wrap items-center gap-2 pt-6 pb-8 sm:gap-4 sm:pb-12">
-            <Link href="/" className="text-2xl font-black tracking-tight text-accent no-underline sm:text-3xl">
+            <Link
+                href="/"
+                onClick={() => syncNow({ interactive: false })}
+                className="text-2xl font-black tracking-tight text-accent no-underline sm:text-3xl"
+            >
                 Homeroom
             </Link>
             <ul className="flex flex-wrap items-center gap-x-1 gap-y-1 ml-auto sm:gap-x-2">

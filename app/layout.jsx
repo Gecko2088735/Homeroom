@@ -1,6 +1,7 @@
 import '../styles/globals.css';
 import { Footer } from '../components/footer';
 import { Header } from '../components/header';
+import { ClassroomSyncProvider } from '../lib/classroom-sync-context';
 import { FocusProvider } from '../lib/focus-context';
 import { StoreProvider } from '../lib/store';
 
@@ -25,13 +26,15 @@ export default function RootLayout({ children }) {
             <body className="antialiased">
                 <StoreProvider>
                     <FocusProvider>
-                        <div className="flex flex-col min-h-screen px-4 sm:px-8">
-                            <div className="flex flex-col w-full max-w-5xl mx-auto grow">
-                                <Header />
-                                <main className="grow pb-12">{children}</main>
-                                <Footer />
+                        <ClassroomSyncProvider>
+                            <div className="flex flex-col min-h-screen px-4 sm:px-8">
+                                <div className="flex flex-col w-full max-w-5xl mx-auto grow">
+                                    <Header />
+                                    <main className="grow pb-12">{children}</main>
+                                    <Footer />
+                                </div>
                             </div>
-                        </div>
+                        </ClassroomSyncProvider>
                     </FocusProvider>
                 </StoreProvider>
             </body>
