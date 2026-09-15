@@ -21,7 +21,7 @@ export function HomeworkCard({ hw, now, onOpen }) {
                     checked={done}
                     onChange={() => toggleComplete(hw.id)}
                     aria-label={done ? `Mark "${hw.title}" as not done` : `Mark "${hw.title}" as done`}
-                    className="w-6 h-6 cursor-pointer accent-accent"
+                    className="checkbox w-6 h-6"
                 />
             </label>
             <Body

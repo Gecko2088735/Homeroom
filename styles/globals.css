@@ -123,4 +123,57 @@
         @apply w-full px-4 py-3 text-sm border rounded-lg border-edge bg-surface text-foreground focus:border-accent focus:outline-3 focus:outline-accent/30;
         min-height: 44px;
     }
+
+    /* Native <select> with the default browser arrow swapped for one that matches the app's
+       icon weight — appearance:none only affects the dropdown affordance, keeping the native
+       picker itself (best for accessibility and mobile). Two icons (light/dark) since a data-URI
+       SVG's colors are fixed at author time and can't follow --color-muted at runtime. */
+    select.input {
+        appearance: none;
+        cursor: pointer;
+        padding-right: 2.75rem;
+        background-repeat: no-repeat;
+        background-position: right 0.875rem center;
+        background-size: 1.15rem;
+        background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 20 20' fill='none'%3E%3Cpath d='M5 7.5l5 5 5-5' stroke='%235f6368' stroke-width='1.75' stroke-linecap='round' stroke-linejoin='round'/%3E%3C/svg%3E");
+    }
+
+    .dark select.input {
+        background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 20 20' fill='none'%3E%3Cpath d='M5 7.5l5 5 5-5' stroke='%239aa0a6' stroke-width='1.75' stroke-linecap='round' stroke-linejoin='round'/%3E%3C/svg%3E");
+    }
+
+    /* Custom checkbox: same rounded-corner, accent-filled language as the rest of the form
+       controls instead of the browser's plain native square. */
+    .checkbox {
+        appearance: none;
+        cursor: pointer;
+        flex-shrink: 0;
+        width: 1.375rem;
+        height: 1.375rem;
+        border-radius: 0.375rem;
+        border: 2px solid var(--color-edge);
+        background-color: var(--color-surface);
+
+        &:hover {
+            border-color: var(--color-muted);
+        }
+
+        &:checked {
+            border-color: var(--color-accent);
+            background-color: var(--color-accent);
+            background-repeat: no-repeat;
+            background-position: center;
+            background-size: 68%;
+            background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 20 20' fill='none'%3E%3Cpath d='M5 10.5l3 3 7-7' stroke='%23ffffff' stroke-width='2.25' stroke-linecap='round' stroke-linejoin='round'/%3E%3C/svg%3E");
+        }
+
+        &:focus-visible {
+            outline: 3px solid var(--color-accent);
+            outline-offset: 2px;
+        }
+    }
+
+    .dark .checkbox:checked {
+        background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 20 20' fill='none'%3E%3Cpath d='M5 10.5l3 3 7-7' stroke='%23202124' stroke-width='2.25' stroke-linecap='round' stroke-linejoin='round'/%3E%3C/svg%3E");
+    }
 }

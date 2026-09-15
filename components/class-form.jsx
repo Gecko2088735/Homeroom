@@ -144,15 +144,19 @@ export function ClassForm({ cls, onSubmit, onCancel }) {
             </fieldset>
 
             {form.days.length > 1 && (
-                <label className="flex items-center gap-2 min-h-11 text-sm cursor-pointer">
-                    <input
-                        type="checkbox"
-                        className="w-5 h-5 cursor-pointer accent-accent"
-                        checked={form.sameTimes}
-                        onChange={(e) => setForm((f) => ({ ...f, sameTimes: e.target.checked }))}
-                    />
-                    Same time every day
-                </label>
+                <div className="flex items-center justify-between gap-3 min-h-11">
+                    <span className="text-sm font-medium">Same time every day</span>
+                    <label className="relative inline-flex items-center shrink-0 cursor-pointer">
+                        <input
+                            type="checkbox"
+                            className="sr-only peer"
+                            checked={form.sameTimes}
+                            onChange={(e) => setForm((f) => ({ ...f, sameTimes: e.target.checked }))}
+                        />
+                        <span className="pointer-events-none w-11 h-6 rounded-full bg-surface-hover border border-edge transition-colors peer-checked:bg-accent peer-checked:border-accent" />
+                        <span className="pointer-events-none absolute left-1 top-1 w-4 h-4 rounded-full bg-white shadow transition-[left] peer-checked:left-6" />
+                    </label>
+                </div>
             )}
 
             {form.days.length > 0 &&

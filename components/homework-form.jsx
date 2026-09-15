@@ -117,26 +117,37 @@ export function HomeworkForm({ hw, defaultClassId, onSubmit, onCancel }) {
                 </div>
             </fieldset>
 
-            <div className="flex flex-col gap-2">
-                <label className="flex items-center gap-2 min-h-11 text-sm cursor-pointer">
-                    <input
-                        type="checkbox"
-                        className="w-5 h-5 cursor-pointer accent-accent"
-                        checked={form.isTest}
-                        onChange={(e) => setForm((f) => ({ ...f, isTest: e.target.checked }))}
-                    />
-                    Test or major project
-                </label>
-                <label className="flex items-center gap-2 min-h-11 text-sm cursor-pointer">
-                    <input
-                        type="checkbox"
-                        className="w-5 h-5 cursor-pointer accent-accent"
-                        checked={form.isGroupProject}
-                        onChange={(e) => setForm((f) => ({ ...f, isGroupProject: e.target.checked }))}
-                    />
-                    Group project
-                </label>
-            </div>
+            <fieldset className="flex flex-col gap-2">
+                <legend className="text-sm font-medium">Tags</legend>
+                <div className="flex flex-wrap gap-2">
+                    <button
+                        type="button"
+                        onClick={() => setForm((f) => ({ ...f, isTest: !f.isTest }))}
+                        aria-pressed={form.isTest}
+                        className={[
+                            'min-h-11 px-3.5 rounded-lg border text-sm font-medium cursor-pointer transition-colors',
+                            form.isTest
+                                ? 'bg-accent text-accent-foreground border-accent'
+                                : 'bg-surface text-muted border-edge hover:bg-surface-hover'
+                        ].join(' ')}
+                    >
+                        Test or major project
+                    </button>
+                    <button
+                        type="button"
+                        onClick={() => setForm((f) => ({ ...f, isGroupProject: !f.isGroupProject }))}
+                        aria-pressed={form.isGroupProject}
+                        className={[
+                            'min-h-11 px-3.5 rounded-lg border text-sm font-medium cursor-pointer transition-colors',
+                            form.isGroupProject
+                                ? 'bg-accent text-accent-foreground border-accent'
+                                : 'bg-surface text-muted border-edge hover:bg-surface-hover'
+                        ].join(' ')}
+                    >
+                        Group project
+                    </button>
+                </div>
+            </fieldset>
 
             <div className="flex gap-3">
                 <label className="flex flex-col gap-1.5 text-sm font-medium grow">

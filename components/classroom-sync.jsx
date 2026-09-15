@@ -47,8 +47,8 @@ export function ClassroomSync() {
             <div className="flex flex-col items-center w-full gap-4 text-center">
                 <h1 className="text-2xl font-black sm:text-3xl">Connect Google Classroom</h1>
                 <p className="text-sm text-muted">
-                    Pull your classes and assignments straight from Google Classroom. Your data stays on this device
-                    — Google is only contacted to read your coursework.
+                    Automatically sync all of your classes with one click. All of your data stays on your device,
+                    never shared with anybody else.
                 </p>
                 <button
                     type="button"
