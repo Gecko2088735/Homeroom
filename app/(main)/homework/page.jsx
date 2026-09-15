@@ -37,8 +37,7 @@ export default function HomeworkPage() {
 
             {!store.ready ? null : store.homework.length === 0 ? (
                 <p className="text-muted">
-                    Nothing here yet. Add homework by hand, or connect Google Classroom in Settings to pull in your
-                    assignments.
+                    No homework yet. Add homework manually or by connecting your google classroom in settings.
                 </p>
             ) : (
                 <>

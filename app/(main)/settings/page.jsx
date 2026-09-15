@@ -1,7 +1,7 @@
 'use client';
 
+import Link from 'next/link';
 import { useEffect, useState } from 'react';
-import { ClassroomSync } from 'components/classroom-sync';
 import { ConfirmDialog } from 'components/confirm-dialog';
 import { ThemeToggle } from 'components/theme-toggle';
 import { loadAutoShift, saveAutoShift } from 'lib/home-layout';
@@ -57,16 +57,21 @@ export default function SettingsPage() {
                 </label>
             </section>
 
-            <section className="flex flex-col gap-3 p-5 border rounded-xl border-edge bg-surface">
-                <h3>Google Classroom</h3>
-                <ClassroomSync />
+            <section className="flex items-center justify-between gap-4 p-5 border rounded-xl border-edge bg-surface">
+                <div>
+                    <h3>Google Classroom</h3>
+                    <p className="text-sm text-muted">Pull your classes and assignments straight from Classroom.</p>
+                </div>
+                <Link href="/classroom" className="text-sm font-medium text-accent underline shrink-0">
+                    Manage Google Classroom →
+                </Link>
             </section>
 
             <section className="flex flex-col gap-3 p-5 border rounded-xl border-edge bg-surface">
                 <h3>Your data</h3>
                 <p className="text-sm text-muted">
-                    Everything is stored in this browser on this device — nothing is uploaded anywhere. Clearing wipes
-                    all classes and homework.
+                    All data used by homeroom is stored on this device. Clearing all data wipes all classes and
+                    homework.
                 </p>
                 <div>
                     <button type="button" className="btn btn-danger" onClick={() => setConfirmingClear(true)}>

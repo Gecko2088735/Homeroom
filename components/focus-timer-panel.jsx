@@ -46,6 +46,7 @@ export function FocusTimerPanel({ classLabel }) {
                         className="input w-24"
                         min={MIN_WORK_MINUTES}
                         max={MAX_WORK_MINUTES}
+                        step={5}
                         value={Math.round(workSeconds / 60)}
                         onChange={handleWorkMinutesChange}
                         disabled={running}

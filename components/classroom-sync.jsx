@@ -43,16 +43,16 @@ export function ClassroomSync() {
     }
 
     return (
-        <div className="flex flex-col gap-3">
-            <p className="text-sm text-muted">
-                Pull your classes and assignments straight from Google Classroom. Your data stays on this device —
-                Google is only contacted to read your coursework. Once connected, Homeroom also quietly re-syncs
-                every 10 minutes and whenever you move between pages, with no extra prompts.
-            </p>
-            <div>
+        <div className="flex flex-col items-center w-full gap-4">
+            <div className="flex flex-col items-center w-full gap-4 text-center">
+                <h1 className="text-2xl font-black sm:text-3xl">Connect Google Classroom</h1>
+                <p className="text-sm text-muted">
+                    Pull your classes and assignments straight from Google Classroom. Your data stays on this device
+                    — Google is only contacted to read your coursework.
+                </p>
                 <button
                     type="button"
-                    className="btn"
+                    className="btn btn-lg btn-ghost w-full"
                     onClick={() => syncNow({ interactive: true })}
                     disabled={status.state === 'syncing'}
                 >

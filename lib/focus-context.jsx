@@ -36,8 +36,8 @@ export function FocusProvider({ children }) {
             notify(
                 PHASE_LABEL[next],
                 next === 'work'
-                    ? `Back to work — ${minutes} minute${minutes === 1 ? '' : 's'} on the clock.`
-                    : `Break time! Step away for ${minutes} minute${minutes === 1 ? '' : 's'}.`
+                    ? `Back to work, we've got ${minutes} minute${minutes === 1 ? '' : 's'} on the clock!`
+                    : `Congrats, you've reached a break. Have fun and step away for ${minutes} minute${minutes === 1 ? '' : 's'}!`
             );
             if (next === 'break') logCompletedSession();
         }

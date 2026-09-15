@@ -9,9 +9,9 @@ import { useClassroomSync } from 'lib/classroom-sync-context';
 const navItems = [
     { linkText: 'Homework', href: '/homework' },
     { linkText: 'Classes', href: '/classes' },
-    { linkText: 'Focus', href: '/focus' },
     { linkText: 'Calendar', href: '/calendar' },
     { linkText: 'Grades', href: '/grades' },
+    { linkText: 'Focus', href: '/focus' },
     { linkText: 'Settings', href: '/settings' }
 ];
 
