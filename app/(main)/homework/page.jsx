@@ -57,10 +57,19 @@ export default function HomeworkPage() {
                             >
                                 {showCompleted ? '▾' : '▸'} Completed ({completed.length})
                             </button>
-                            {showCompleted &&
-                                completed.map((hw) => (
-                                    <HomeworkCard key={hw.id} hw={hw} now={now} onOpen={() => setDetailId(hw.id)} />
-                                ))}
+                            <div
+                                className={[
+                                    'grid transition-[grid-template-rows] duration-300 ease-out',
+                                    showCompleted ? 'grid-rows-[1fr]' : 'grid-rows-[0fr]'
+                                ].join(' ')}
+                                aria-hidden={!showCompleted}
+                            >
+                                <div className="flex flex-col gap-3 overflow-hidden">
+                                    {completed.map((hw) => (
+                                        <HomeworkCard key={hw.id} hw={hw} now={now} onOpen={() => setDetailId(hw.id)} />
+                                    ))}
+                                </div>
+                            </div>
                         </div>
                     )}
                 </>
@@ -75,7 +84,17 @@ export default function HomeworkPage() {
                     >
                         {showAnnouncements ? '▾' : '▸'} Announcements ({store.announcements.length})
                     </button>
-                    {showAnnouncements && <AnnouncementsList />}
+                    <div
+                        className={[
+                            'grid transition-[grid-template-rows] duration-300 ease-out',
+                            showAnnouncements ? 'grid-rows-[1fr]' : 'grid-rows-[0fr]'
+                        ].join(' ')}
+                        aria-hidden={!showAnnouncements}
+                    >
+                        <div className="overflow-hidden">
+                            <AnnouncementsList />
+                        </div>
+                    </div>
                 </div>
             )}
 

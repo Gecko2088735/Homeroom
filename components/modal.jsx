@@ -1,15 +1,36 @@
 'use client';
 
-import { useEffect, useRef } from 'react';
+import { useEffect, useRef, useState } from 'react';
 
+const TRANSITION_MS = 150;
+
+// Two-phase open/close so the panel can fade+scale in and out instead of snapping. `entered`
+// lags one frame behind `open` on the way in (so the browser has a "from" state to transition
+// from) and `rendered` lags TRANSITION_MS behind `open` on the way out (so children — and the
+// native <dialog> itself — stay mounted long enough for the exit transition to actually play).
 export function Modal({ open, onClose, title, children }) {
     const ref = useRef(null);
+    const [rendered, setRendered] = useState(open);
+    const [entered, setEntered] = useState(false);
+    const closeTimeoutRef = useRef(null);
 
     useEffect(() => {
         const dialog = ref.current;
         if (!dialog) return;
-        if (open && !dialog.open) dialog.showModal();
-        else if (!open && dialog.open) dialog.close();
+        clearTimeout(closeTimeoutRef.current);
+        if (open) {
+            // eslint-disable-next-line react-hooks/set-state-in-effect -- coupled to the imperative showModal() call below
+            setRendered(true);
+            if (!dialog.open) dialog.showModal();
+            const raf = requestAnimationFrame(() => setEntered(true));
+            return () => cancelAnimationFrame(raf);
+        }
+        setEntered(false);
+        closeTimeoutRef.current = setTimeout(() => {
+            if (dialog.open) dialog.close();
+            setRendered(false);
+        }, TRANSITION_MS);
+        return () => clearTimeout(closeTimeoutRef.current);
     }, [open]);
 
     return (
@@ -21,7 +42,13 @@ export function Modal({ open, onClose, title, children }) {
             }}
             className="m-auto w-full max-w-lg bg-transparent p-4 backdrop:bg-black/50"
         >
-            <div className="flex flex-col gap-4 rounded-xl border border-edge bg-surface p-6 text-foreground">
+            <div
+                className={[
+                    'flex flex-col gap-4 rounded-xl border border-edge bg-surface p-6 text-foreground',
+                    'transition-[opacity,transform,background-color,border-color,color] duration-150 ease-out',
+                    entered ? 'opacity-100 scale-100' : 'opacity-0 scale-95'
+                ].join(' ')}
+            >
                 <div className="flex items-center justify-between gap-4">
                     <h2>{title}</h2>
                     <button
@@ -40,7 +67,7 @@ export function Modal({ open, onClose, title, children }) {
                         </svg>
                     </button>
                 </div>
-                {open && children}
+                {rendered && children}
             </div>
         </dialog>
     );

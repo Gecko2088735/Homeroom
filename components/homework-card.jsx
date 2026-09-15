@@ -1,25 +1,51 @@
 'use client';
 
+import { useEffect, useRef, useState } from 'react';
 import { classColor } from 'lib/colors';
 import { formatRelative, homeworkDueAt } from 'lib/dates';
 import { formatPercentage, isGraded, itemPercentage } from 'lib/grades';
 import { useStore } from 'lib/store';
 
+const EXIT_MS = 200;
+
 export function HomeworkCard({ hw, now, onOpen }) {
     const { classes, toggleComplete } = useStore();
+    const [pending, setPending] = useState(false);
+    const timeoutRef = useRef(null);
+
+    // Fires the actual completion toggle only after the exit animation plays, so the card
+    // fades/shrinks out of the list instead of just vanishing the instant it's checked.
+    useEffect(() => () => clearTimeout(timeoutRef.current), []);
+
     const cls = classes.find((c) => c.id === hw.classId);
     const color = cls ? classColor(cls.color) : null;
-    const done = !!hw.completedAt;
+    const storedDone = !!hw.completedAt;
+    const done = pending ? !storedDone : storedDone;
     const relative = formatRelative(homeworkDueAt(hw), now);
     const overdue = !done && relative === 'overdue';
 
+    function handleToggle() {
+        setPending(true);
+        clearTimeout(timeoutRef.current);
+        timeoutRef.current = setTimeout(() => {
+            toggleComplete(hw.id);
+            setPending(false);
+        }, EXIT_MS);
+    }
+
     return (
-        <div className="flex items-center gap-1 px-2 py-2 border bg-surface border-edge rounded-xl sm:gap-3 sm:px-4 sm:py-3">
+        <div
+            className={[
+                'flex items-center gap-1 px-2 py-2 border bg-surface border-edge rounded-xl sm:gap-3 sm:px-4 sm:py-3',
+                'transition-[opacity,transform,background-color,border-color,color] duration-200 ease-out',
+                pending ? 'opacity-0 scale-[0.97]' : 'opacity-100 scale-100'
+            ].join(' ')}
+        >
             <label className="inline-flex items-center justify-center w-11 h-11 shrink-0 cursor-pointer">
                 <input
                     type="checkbox"
                     checked={done}
-                    onChange={() => toggleComplete(hw.id)}
+                    onChange={handleToggle}
                     aria-label={done ? `Mark "${hw.title}" as not done` : `Mark "${hw.title}" as done`}
                     className="checkbox w-6 h-6"
                 />
